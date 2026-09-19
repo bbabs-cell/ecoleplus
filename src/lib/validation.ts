@@ -89,3 +89,134 @@ export const inscriptionSchema = z.object({
   // imposée : les règles de caractères poussent aux mots de passe prévisibles.
   motDePasse: z.string().min(12, 'Le mot de passe doit comporter au moins 12 caractères').max(200),
 });
+
+// ---------------------------------------------------------------------------
+// Domaine académique (phase 2)
+// ---------------------------------------------------------------------------
+// Les contraintes reprennent celles des migrations 0009 à 0011. Le libellé des
+// années, le découpage en périodes et le nom des niveaux restent du texte
+// libre : aucune forme n'est imposée à un système éducatif (CLAUDE.md, règle 2).
+
+const dateIso = texteCourt.regex(/^\d{4}-\d{2}-\d{2}$/, 'Date invalide');
+
+/** Code court partagé par niveaux, matières, classes et groupes. */
+export const codeReferentielSchema = texteCourt
+  .toUpperCase()
+  .regex(
+    /^[A-Z0-9][A-Z0-9_-]{0,31}$/,
+    'Le code doit commencer par une lettre ou un chiffre et ne contenir que A-Z, 0-9, « - » et « _ »',
+  );
+
+export const anneeSchema = z
+  .object({
+    nom: texteCourt.min(2, 'Le libellé doit comporter au moins 2 caractères').max(60),
+    debut: dateIso,
+    fin: dateIso,
+  })
+  .refine((valeurs) => valeurs.fin > valeurs.debut, {
+    message: 'La fin doit être postérieure au début',
+    path: ['fin'],
+  });
+export type SaisieAnnee = z.infer<typeof anneeSchema>;
+
+export const periodeSchema = z
+  .object({
+    nom: texteCourt.min(1, 'Libellé requis').max(60),
+    type: texteCourt.max(40).optional().or(z.literal('')),
+    position: z.coerce.number().int().min(1).max(24),
+    debut: dateIso,
+    fin: dateIso,
+  })
+  .refine((valeurs) => valeurs.fin > valeurs.debut, {
+    message: 'La fin doit être postérieure au début',
+    path: ['fin'],
+  });
+export type SaisiePeriode = z.infer<typeof periodeSchema>;
+
+export const niveauSchema = z.object({
+  nom: texteCourt.min(1, 'Nom requis').max(80),
+  code: codeReferentielSchema,
+  cycle: texteCourt.max(60).optional().or(z.literal('')),
+  position: z.coerce.number().int().min(0).max(999),
+});
+export type SaisieNiveau = z.infer<typeof niveauSchema>;
+
+export const matiereSchema = z.object({
+  nom: texteCourt.min(1, 'Nom requis').max(120),
+  code: codeReferentielSchema,
+  description: texteCourt.max(300).optional().or(z.literal('')),
+});
+export type SaisieMatiere = z.infer<typeof matiereSchema>;
+
+export const enseignantSchema = z.object({
+  prenom: texteCourt.max(80).optional().or(z.literal('')),
+  nom: texteCourt.min(1, 'Nom requis').max(80),
+  email: z.union([emailSchema, z.literal('')]),
+  telephone: texteCourt.max(40).optional().or(z.literal('')),
+  code: z
+    .union([codeReferentielSchema, z.literal('')])
+    .optional(),
+  dateEmbauche: z.union([dateIso, z.literal('')]).optional(),
+});
+export type SaisieEnseignant = z.infer<typeof enseignantSchema>;
+
+export const classeSchema = z.object({
+  nom: texteCourt.min(1, 'Nom requis').max(80),
+  code: codeReferentielSchema,
+  niveauId: z.string().uuid('Sélectionnez un niveau'),
+  // Vide = pas de plafond d'effectif.
+  capacite: z
+    .union([z.coerce.number().int().min(1).max(2000), z.literal('')])
+    .optional(),
+  enseignantPrincipalId: z.union([z.string().uuid(), z.literal('')]).optional(),
+});
+export type SaisieClasse = z.infer<typeof classeSchema>;
+
+const STATUTS_INSCRIPTION = [
+  'PREREGISTERED',
+  'ENROLLED',
+  'ACTIVE',
+  'SUSPENDED',
+  'TRANSFERRED',
+  'GRADUATED',
+  'DROPPED_OUT',
+  'ARCHIVED',
+] as const;
+
+export const statutInscriptionSchema = z.enum(STATUTS_INSCRIPTION);
+
+export const inscriptionApprenantSchema = z.object({
+  prenom: texteCourt.max(80).optional().or(z.literal('')),
+  nom: texteCourt.min(1, 'Nom requis').max(80),
+  anneeId: z.string().uuid('Sélectionnez une année académique'),
+  niveauId: z.union([z.string().uuid(), z.literal('')]).optional(),
+  classeId: z.union([z.string().uuid(), z.literal('')]).optional(),
+  dateNaissance: z.union([dateIso, z.literal('')]).optional(),
+  genre: texteCourt.max(40).optional().or(z.literal('')),
+  matricule: texteCourt.max(40).optional().or(z.literal('')),
+  email: z.union([emailSchema, z.literal('')]),
+  telephone: texteCourt.max(40).optional().or(z.literal('')),
+  statut: statutInscriptionSchema,
+});
+export type SaisieInscriptionApprenant = z.infer<typeof inscriptionApprenantSchema>;
+
+export const apprenantSchema = z.object({
+  prenom: texteCourt.max(80).optional().or(z.literal('')),
+  nom: texteCourt.min(1, 'Nom requis').max(80),
+  dateNaissance: z.union([dateIso, z.literal('')]).optional(),
+  lieuNaissance: texteCourt.max(120).optional().or(z.literal('')),
+  genre: texteCourt.max(40).optional().or(z.literal('')),
+  nationalite: texteCourt.max(80).optional().or(z.literal('')),
+  matricule: texteCourt.max(40).optional().or(z.literal('')),
+  email: z.union([emailSchema, z.literal('')]),
+  telephone: texteCourt.max(40).optional().or(z.literal('')),
+  adresse: texteCourt.max(300).optional().or(z.literal('')),
+});
+export type SaisieApprenant = z.infer<typeof apprenantSchema>;
+
+export const affectationSchema = z.object({
+  classeId: z.string().uuid('Sélectionnez une classe'),
+  matiereId: z.string().uuid('Sélectionnez une matière'),
+  enseignantId: z.string().uuid('Sélectionnez un enseignant'),
+});
+export type SaisieAffectation = z.infer<typeof affectationSchema>;

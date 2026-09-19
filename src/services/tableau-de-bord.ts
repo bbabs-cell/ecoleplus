@@ -6,6 +6,13 @@ export interface StatistiquesSocle {
   invitationsEnAttente: number | null;
 }
 
+export interface StatistiquesAcademiques {
+  anneeNom: string | null;
+  apprenantsActifs: number;
+  classes: number;
+  enseignants: number;
+}
+
 /**
  * Compteurs du tableau de bord.
  *
@@ -37,5 +44,60 @@ export async function statistiquesSocle(peutVoirInvitations: boolean): Promise<S
     etablissements: etablissements.count ?? 0,
     membres: membres.count ?? 0,
     invitationsEnAttente: invitations.count ?? null,
+  };
+}
+
+/**
+ * Chiffres de l'année en cours dans l'établissement de travail.
+ *
+ * Tous passent par RLS : un enseignant y lit ce que sa portée lui laisse voir,
+ * un propriétaire le total de l'établissement. « Apprenants actifs » ne compte
+ * que les inscriptions vivantes — un diplômé n'est plus un effectif.
+ */
+export async function statistiquesAcademiques(
+  etablissementId: string,
+): Promise<StatistiquesAcademiques> {
+  const supabase = await clientServeur();
+
+  const { data: annee } = await supabase
+    .from('academic_years')
+    .select('id, name')
+    .eq('establishment_id', etablissementId)
+    .eq('is_current', true)
+    .maybeSingle();
+
+  if (!annee) {
+    const { count } = await supabase
+      .from('teachers')
+      .select('id', { count: 'exact', head: true })
+      .eq('establishment_id', etablissementId)
+      .eq('status', 'ACTIVE');
+
+    return { anneeNom: null, apprenantsActifs: 0, classes: 0, enseignants: count ?? 0 };
+  }
+
+  const [apprenants, classes, enseignants] = await Promise.all([
+    supabase
+      .from('enrollments')
+      .select('id', { count: 'exact', head: true })
+      .eq('academic_year_id', annee.id)
+      .in('status', ['PREREGISTERED', 'ENROLLED', 'ACTIVE', 'SUSPENDED']),
+    supabase
+      .from('classes')
+      .select('id', { count: 'exact', head: true })
+      .eq('academic_year_id', annee.id)
+      .eq('is_active', true),
+    supabase
+      .from('teachers')
+      .select('id', { count: 'exact', head: true })
+      .eq('establishment_id', etablissementId)
+      .eq('status', 'ACTIVE'),
+  ]);
+
+  return {
+    anneeNom: annee.name,
+    apprenantsActifs: apprenants.count ?? 0,
+    classes: classes.count ?? 0,
+    enseignants: enseignants.count ?? 0,
   };
 }

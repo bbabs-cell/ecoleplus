@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Building2, MailPlus, Users } from 'lucide-react';
+import { Building2, GraduationCap, MailPlus, School, Users, UsersRound } from 'lucide-react';
 import { exigerOrganisation } from '@/services/permissions';
-import { statistiquesSocle } from '@/services/tableau-de-bord';
+import { statistiquesAcademiques, statistiquesSocle } from '@/services/tableau-de-bord';
 import { nomAffiche } from '@/lib/format';
 import { nomPays } from '@/lib/reference';
 import { Carte, CorpsCarte } from '@/components/ui/carte';
@@ -50,6 +50,13 @@ export default async function PageTableauDeBord() {
   const { permissions, reglages, organisation, profil, adhesion } = contexte;
 
   const stats = await statistiquesSocle(permissions.has('members.invite'));
+
+  // Les chiffres académiques n'ont de sens qu'avec un établissement de travail
+  // et la permission de le consulter.
+  const academique =
+    contexte.etablissementActif && permissions.has('learners.read')
+      ? await statistiquesAcademiques(contexte.etablissementActif.id)
+      : null;
   const prenom = nomAffiche(profil, reglages.name_display_format).split(' ')[0] ?? '';
 
   return (
@@ -87,6 +94,49 @@ export default async function PageTableauDeBord() {
         ) : null}
       </div>
 
+      {academique ? (
+        <section className="space-y-3">
+          <h2 className="text-sm font-semibold text-encre">
+            Année en cours
+            {academique.anneeNom ? (
+              <span className="font-normal text-encre-douce"> · {academique.anneeNom}</span>
+            ) : null}
+          </h2>
+
+          {academique.anneeNom ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Indicateur
+                libelle="Apprenants inscrits"
+                valeur={academique.apprenantsActifs}
+                Icone={UsersRound}
+                href="/apprenants"
+              />
+              <Indicateur
+                libelle={academique.classes > 1 ? 'Classes ouvertes' : 'Classe ouverte'}
+                valeur={academique.classes}
+                Icone={School}
+                href={permissions.has('classes.read') ? '/classes' : undefined}
+              />
+              <Indicateur
+                libelle={academique.enseignants > 1 ? 'Enseignants actifs' : 'Enseignant actif'}
+                valeur={academique.enseignants}
+                Icone={GraduationCap}
+                href={permissions.has('teachers.read') ? '/enseignants' : undefined}
+              />
+            </div>
+          ) : (
+            <Alerte ton="info" titre="Aucune année académique en cours">
+              Désignez une année courante pour suivre les effectifs.{' '}
+              {permissions.has('academic.manage') ? (
+                <Link href="/annees" className="font-medium text-primaire">
+                  Gérer les années
+                </Link>
+              ) : null}
+            </Alerte>
+          )}
+        </section>
+      ) : null}
+
       {stats.etablissements === 0 && permissions.has('establishments.create') ? (
         <Alerte ton="info" titre="Commencez par créer un établissement">
           Classes, enseignants et apprenants se rattachent tous à un établissement. C&apos;est la
@@ -101,9 +151,10 @@ export default async function PageTableauDeBord() {
         <CorpsCarte className="space-y-2">
           <h2 className="text-sm font-semibold text-encre">Ce qui arrive ensuite</h2>
           <p className="text-sm text-encre-douce">
-            Le socle est en place : organisations, établissements, rôles, permissions, journal
-            d&apos;audit. Les modules académiques — années, classes, matières, apprenants,
-            inscriptions — constituent la phase suivante de la feuille de route.
+            Le socle et la gestion académique sont en place : organisations, établissements,
+            rôles, années, niveaux, matières, enseignants, classes, apprenants et inscriptions.
+            La phase suivante apporte les présences et la notation — sessions d&apos;appel,
+            évaluations, barèmes configurables et bulletins.
           </p>
         </CorpsCarte>
       </Carte>

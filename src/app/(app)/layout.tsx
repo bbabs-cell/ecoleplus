@@ -19,8 +19,28 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     ...(permissions.has('establishments.read')
       ? [{ href: '/etablissements', libelle: 'Établissements', icone: 'etablissements' } as const]
       : []),
+
+    // Domaine académique. Chaque entrée n'apparaît qu'avec la permission qui
+    // commande réellement la page : un lien sans droit mènerait à un refus.
+    ...(permissions.has('academic.read')
+      ? [
+          { href: '/annees', libelle: 'Années', icone: 'annees', separateur: true } as const,
+          { href: '/niveaux', libelle: 'Niveaux', icone: 'niveaux' } as const,
+          { href: '/matieres', libelle: 'Matières', icone: 'matieres' } as const,
+        ]
+      : []),
+    ...(permissions.has('teachers.read')
+      ? [{ href: '/enseignants', libelle: 'Enseignants', icone: 'enseignants' } as const]
+      : []),
+    ...(permissions.has('classes.read')
+      ? [{ href: '/classes', libelle: 'Classes', icone: 'classes' } as const]
+      : []),
+    ...(permissions.has('learners.read')
+      ? [{ href: '/apprenants', libelle: 'Apprenants', icone: 'apprenants' } as const]
+      : []),
+
     ...(permissions.has('members.read')
-      ? [{ href: '/membres', libelle: 'Membres', icone: 'membres' } as const]
+      ? [{ href: '/membres', libelle: 'Membres', icone: 'membres', separateur: true } as const]
       : []),
     ...(permissions.has('audit.read')
       ? [{ href: '/journal', libelle: "Journal d'audit", icone: 'journal' } as const]
