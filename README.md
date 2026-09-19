@@ -24,51 +24,46 @@ inscriptions) n'est pas commencée.
 
 ## Installation
 
-### 1. Dépendances
+Le projet Supabase et le projet Vercel sont déjà provisionnés et reliés. Pour
+travailler en local :
 
 ```bash
 npm install
-```
-
-### 2. Projet Supabase
-
-Créez un projet sur [supabase.com](https://supabase.com), puis appliquez les
-migrations **dans l'ordre**. Avec la CLI Supabase :
-
-```bash
-supabase link --project-ref <ref-du-projet>
-supabase db push
-```
-
-Ou, sans la CLI, en collant chaque fichier de `supabase/migrations/` dans le
-SQL Editor du tableau de bord, du plus petit numéro au plus grand.
-
-### 3. Activer le hook JWT — indispensable
-
-Tableau de bord Supabase → **Authentication → Hooks → Customize Access Token (JWT) Claims**
-→ sélectionner `ecoleplus.custom_access_token_hook`.
-
-Sans cette étape, aucun jeton ne porte d'organisation : RLS refuse tout et
-l'application reste vide. L'échec est volontairement fermé, jamais ouvert.
-
-### 4. Variables d'environnement
-
-```bash
-cp .env.example .env.local
-```
-
-Renseignez `NEXT_PUBLIC_SUPABASE_URL` et `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-(Settings → API). Ne placez **jamais** la clé `service_role` dans une variable
-`NEXT_PUBLIC_*` : elle contourne RLS.
-
-### 5. Lancer
-
-```bash
+cp .env.example .env.local   # puis renseigner les deux valeurs
 npm run dev
 ```
 
-Créez un compte, puis votre organisation. Le premier compte en devient
+Les deux variables se trouvent dans Supabase → Settings → API, et sont déjà
+posées sur Vercel (production, preview, development). Ne placez **jamais** la
+clé `service_role` dans une variable `NEXT_PUBLIC_*` : elle contourne RLS.
+
+### Étape manuelle restante : activer le hook JWT
+
+Tableau de bord Supabase → **Authentication → Hooks → Customize Access Token
+(JWT) Claims** → sélectionner `ecoleplus.custom_access_token_hook`.
+
+L'API de configuration Auth n'est pas exposée par la CLI : cette bascule se
+fait à la main, une fois. Sans elle, aucun jeton ne porte d'organisation, RLS
+refuse tout et l'application reste vide. L'échec est fermé par conception,
+jamais ouvert.
+
+Ensuite : créer un compte, puis son organisation. Le premier compte en devient
 propriétaire.
+
+### Régénérer les types après une migration
+
+```bash
+npx supabase gen types typescript --project-id oaloryktutwwgjqknmbm \
+  --schema public > src/lib/types/database.generated.ts
+```
+
+`database.generated.ts` ne se modifie pas à la main ; les alias lisibles vivent
+à côté, dans `database.ts`.
+
+### Appliquer une nouvelle migration
+
+Ajouter un fichier numéroté dans `supabase/migrations/`, puis `supabase db push`
+(ou le SQL Editor). Ne jamais modifier une migration déjà appliquée.
 
 ---
 
@@ -103,7 +98,7 @@ src/
 ├── app/            Routes (App Router). Server Components par défaut.
 ├── components/     ui/ = primitives réutilisables ; coque/ = navigation.
 ├── config/         brand.ts — nom du produit, jamais codé en dur ailleurs.
-├── lib/            Supabase, validation Zod, formatage localisé, référentiels.
+├── lib/            Supabase, types générés, validation Zod, formatage, référentiels.
 └── services/       Logique métier. *.actions.ts = Server Actions.
 
 supabase/
