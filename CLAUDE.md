@@ -4,6 +4,8 @@ SaaS multi-tenant international de gestion scolaire/universitaire (maternelle �
 
 Détails complets : @docs/architecture.md · @docs/roadmap.md · @docs/design-guidelines.md · @docs/regles-code.md
 
+Règles métier des phases à venir : @docs/business-rules/moteur-notation.md · @docs/business-rules/presences.md · @docs/business-rules/finances.md · @docs/reprise-projet-precedent.md
+
 ## Stack (ne pas changer sans justification + validation explicite)
 
 - **Frontend** : Next.js (App Router) + TypeScript strict + React + Tailwind
