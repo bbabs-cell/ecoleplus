@@ -32,3 +32,23 @@ export type OrganizationMembership = Tables<'organization_memberships'>;
 export type EstablishmentUser = Tables<'establishment_users'>;
 export type OrganizationInvitation = Tables<'organization_invitations'>;
 export type AuditLog = Tables<'audit_logs'>;
+
+// ---------------------------------------------------------------------------
+// Domaine académique (phase 2)
+// ---------------------------------------------------------------------------
+
+export type AcademicYearStatus = Enums<'academic_year_status'>;
+export type EnrollmentStatus = Enums<'enrollment_status'>;
+export type TeacherStatus = Enums<'teacher_status'>;
+
+export type AcademicYear = Tables<'academic_years'>;
+export type AcademicTerm = Tables<'academic_terms'>;
+export type Level = Tables<'levels'>;
+export type Subject = Tables<'subjects'>;
+export type Teacher = Tables<'teachers'>;
+export type Learner = Tables<'learners'>;
+export type Enrollment = Tables<'enrollments'>;
+export type Classe = Tables<'classes'>;
+export type Group = Tables<'groups'>;
+export type GroupMember = Tables<'group_members'>;
+export type TeachingAssignment = Tables<'teaching_assignments'>;

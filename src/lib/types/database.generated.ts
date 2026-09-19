@@ -1,8 +1,8 @@
 /**
  * Fichier GÉNÉRÉ — ne pas modifier à la main.
  *
- *   npx supabase gen types typescript --project-id <ref> --schema public \
- *     > src/lib/types/database.generated.ts
+ *   npx supabase gen types typescript --project-id oaloryktutwwgjqknmbm \
+ *     --schema public > src/lib/types/database.generated.ts
  *
  * À régénérer après toute migration touchant le schéma `public`.
  * Les alias métier se trouvent dans `database.ts`, à côté.
@@ -22,6 +22,100 @@ export type Database = {
   }
   public: {
     Tables: {
+      academic_terms: {
+        Row: {
+          academic_year_id: string
+          created_at: string
+          ends_on: string
+          id: string
+          kind_label: string | null
+          name: string
+          organization_id: string
+          position: number
+          starts_on: string
+          updated_at: string
+        }
+        Insert: {
+          academic_year_id: string
+          created_at?: string
+          ends_on: string
+          id?: string
+          kind_label?: string | null
+          name: string
+          organization_id: string
+          position: number
+          starts_on: string
+          updated_at?: string
+        }
+        Update: {
+          academic_year_id?: string
+          created_at?: string
+          ends_on?: string
+          id?: string
+          kind_label?: string | null
+          name?: string
+          organization_id?: string
+          position?: number
+          starts_on?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "academic_terms_academic_year_id_organization_id_fkey"
+            columns: ["academic_year_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
+      academic_years: {
+        Row: {
+          created_at: string
+          ends_on: string
+          establishment_id: string
+          id: string
+          is_current: boolean
+          name: string
+          organization_id: string
+          starts_on: string
+          status: Database["public"]["Enums"]["academic_year_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          ends_on: string
+          establishment_id: string
+          id?: string
+          is_current?: boolean
+          name: string
+          organization_id: string
+          starts_on: string
+          status?: Database["public"]["Enums"]["academic_year_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          ends_on?: string
+          establishment_id?: string
+          id?: string
+          is_current?: boolean
+          name?: string
+          organization_id?: string
+          starts_on?: string
+          status?: Database["public"]["Enums"]["academic_year_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "academic_years_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
       audit_logs: {
         Row: {
           action: string
@@ -89,6 +183,164 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      classes: {
+        Row: {
+          academic_year_id: string
+          capacity: number | null
+          code: string
+          created_at: string
+          establishment_id: string
+          id: string
+          is_active: boolean
+          level_id: string
+          main_teacher_id: string | null
+          name: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          academic_year_id: string
+          capacity?: number | null
+          code: string
+          created_at?: string
+          establishment_id: string
+          id?: string
+          is_active?: boolean
+          level_id: string
+          main_teacher_id?: string | null
+          name: string
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          academic_year_id?: string
+          capacity?: number | null
+          code?: string
+          created_at?: string
+          establishment_id?: string
+          id?: string
+          is_active?: boolean
+          level_id?: string
+          main_teacher_id?: string | null
+          name?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classes_academic_year_id_establishment_id_fkey"
+            columns: ["academic_year_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id", "establishment_id"]
+          },
+          {
+            foreignKeyName: "classes_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "classes_level_id_establishment_id_fkey"
+            columns: ["level_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "levels"
+            referencedColumns: ["id", "establishment_id"]
+          },
+          {
+            foreignKeyName: "classes_main_teacher_id_establishment_id_fkey"
+            columns: ["main_teacher_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "teachers"
+            referencedColumns: ["id", "establishment_id"]
+          },
+        ]
+      }
+      enrollments: {
+        Row: {
+          academic_year_id: string
+          class_id: string | null
+          created_at: string
+          ended_on: string | null
+          enrolled_on: string
+          establishment_id: string
+          id: string
+          learner_id: string
+          level_id: string | null
+          organization_id: string
+          status: Database["public"]["Enums"]["enrollment_status"]
+          status_reason: string | null
+          updated_at: string
+        }
+        Insert: {
+          academic_year_id: string
+          class_id?: string | null
+          created_at?: string
+          ended_on?: string | null
+          enrolled_on?: string
+          establishment_id: string
+          id?: string
+          learner_id: string
+          level_id?: string | null
+          organization_id: string
+          status?: Database["public"]["Enums"]["enrollment_status"]
+          status_reason?: string | null
+          updated_at?: string
+        }
+        Update: {
+          academic_year_id?: string
+          class_id?: string | null
+          created_at?: string
+          ended_on?: string | null
+          enrolled_on?: string
+          establishment_id?: string
+          id?: string
+          learner_id?: string
+          level_id?: string | null
+          organization_id?: string
+          status?: Database["public"]["Enums"]["enrollment_status"]
+          status_reason?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enrollments_academic_year_id_establishment_id_fkey"
+            columns: ["academic_year_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id", "establishment_id"]
+          },
+          {
+            foreignKeyName: "enrollments_classe_fkey"
+            columns: ["class_id", "academic_year_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id", "academic_year_id"]
+          },
+          {
+            foreignKeyName: "enrollments_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "enrollments_learner_id_organization_id_fkey"
+            columns: ["learner_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "learners"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "enrollments_level_id_establishment_id_fkey"
+            columns: ["level_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "levels"
+            referencedColumns: ["id", "establishment_id"]
           },
         ]
       }
@@ -184,6 +436,224 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_members: {
+        Row: {
+          academic_year_id: string
+          created_at: string
+          enrollment_id: string
+          group_id: string
+          organization_id: string
+        }
+        Insert: {
+          academic_year_id: string
+          created_at?: string
+          enrollment_id: string
+          group_id: string
+          organization_id: string
+        }
+        Update: {
+          academic_year_id?: string
+          created_at?: string
+          enrollment_id?: string
+          group_id?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_enrollment_id_academic_year_id_fkey"
+            columns: ["enrollment_id", "academic_year_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id", "academic_year_id"]
+          },
+          {
+            foreignKeyName: "group_members_group_id_academic_year_id_fkey"
+            columns: ["group_id", "academic_year_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id", "academic_year_id"]
+          },
+          {
+            foreignKeyName: "group_members_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      groups: {
+        Row: {
+          academic_year_id: string
+          code: string
+          created_at: string
+          establishment_id: string
+          id: string
+          is_active: boolean
+          kind_label: string | null
+          name: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          academic_year_id: string
+          code: string
+          created_at?: string
+          establishment_id: string
+          id?: string
+          is_active?: boolean
+          kind_label?: string | null
+          name: string
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          academic_year_id?: string
+          code?: string
+          created_at?: string
+          establishment_id?: string
+          id?: string
+          is_active?: boolean
+          kind_label?: string | null
+          name?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "groups_academic_year_id_establishment_id_fkey"
+            columns: ["academic_year_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id", "establishment_id"]
+          },
+          {
+            foreignKeyName: "groups_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
+      learners: {
+        Row: {
+          address: string | null
+          birth_date: string | null
+          birth_place: string | null
+          created_at: string
+          email: string | null
+          family_name: string
+          gender_label: string | null
+          given_name: string
+          id: string
+          is_archived: boolean
+          learner_code: string | null
+          national_id: string | null
+          nationality: string | null
+          notes: string | null
+          organization_id: string
+          phone: string | null
+          photo_path: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          birth_date?: string | null
+          birth_place?: string | null
+          created_at?: string
+          email?: string | null
+          family_name: string
+          gender_label?: string | null
+          given_name: string
+          id?: string
+          is_archived?: boolean
+          learner_code?: string | null
+          national_id?: string | null
+          nationality?: string | null
+          notes?: string | null
+          organization_id: string
+          phone?: string | null
+          photo_path?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          birth_date?: string | null
+          birth_place?: string | null
+          created_at?: string
+          email?: string | null
+          family_name?: string
+          gender_label?: string | null
+          given_name?: string
+          id?: string
+          is_archived?: boolean
+          learner_code?: string | null
+          national_id?: string | null
+          nationality?: string | null
+          notes?: string | null
+          organization_id?: string
+          phone?: string | null
+          photo_path?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learners_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      levels: {
+        Row: {
+          code: string
+          created_at: string
+          establishment_id: string
+          id: string
+          is_active: boolean
+          name: string
+          organization_id: string
+          position: number
+          stage_label: string | null
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          establishment_id: string
+          id?: string
+          is_active?: boolean
+          name: string
+          organization_id: string
+          position: number
+          stage_label?: string | null
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          establishment_id?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          organization_id?: string
+          position?: number
+          stage_label?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "levels_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
           },
         ]
       }
@@ -566,14 +1036,195 @@ export type Database = {
           },
         ]
       }
+      subjects: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          establishment_id: string
+          id: string
+          is_active: boolean
+          name: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          establishment_id: string
+          id?: string
+          is_active?: boolean
+          name: string
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          establishment_id?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subjects_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
+      teachers: {
+        Row: {
+          created_at: string
+          email: string | null
+          establishment_id: string
+          family_name: string
+          given_name: string
+          hired_on: string | null
+          id: string
+          organization_id: string
+          phone: string | null
+          profile_id: string | null
+          staff_code: string | null
+          status: Database["public"]["Enums"]["teacher_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          establishment_id: string
+          family_name: string
+          given_name: string
+          hired_on?: string | null
+          id?: string
+          organization_id: string
+          phone?: string | null
+          profile_id?: string | null
+          staff_code?: string | null
+          status?: Database["public"]["Enums"]["teacher_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          establishment_id?: string
+          family_name?: string
+          given_name?: string
+          hired_on?: string | null
+          id?: string
+          organization_id?: string
+          phone?: string | null
+          profile_id?: string | null
+          staff_code?: string | null
+          status?: Database["public"]["Enums"]["teacher_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teachers_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "teachers_profile_id_organization_id_fkey"
+            columns: ["profile_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "organization_memberships"
+            referencedColumns: ["profile_id", "organization_id"]
+          },
+        ]
+      }
+      teaching_assignments: {
+        Row: {
+          class_id: string
+          created_at: string
+          establishment_id: string
+          id: string
+          organization_id: string
+          subject_id: string
+          teacher_id: string
+          updated_at: string
+        }
+        Insert: {
+          class_id: string
+          created_at?: string
+          establishment_id: string
+          id?: string
+          organization_id: string
+          subject_id: string
+          teacher_id: string
+          updated_at?: string
+        }
+        Update: {
+          class_id?: string
+          created_at?: string
+          establishment_id?: string
+          id?: string
+          organization_id?: string
+          subject_id?: string
+          teacher_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teaching_assignments_class_id_establishment_id_fkey"
+            columns: ["class_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id", "establishment_id"]
+          },
+          {
+            foreignKeyName: "teaching_assignments_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "teaching_assignments_subject_id_establishment_id_fkey"
+            columns: ["subject_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id", "establishment_id"]
+          },
+          {
+            foreignKeyName: "teaching_assignments_teacher_id_establishment_id_fkey"
+            columns: ["teacher_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "teachers"
+            referencedColumns: ["id", "establishment_id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
       accepter_invitation: { Args: { p_token: string }; Returns: string }
+      affecter_classe: {
+        Args: { p_class_id: string; p_enrollment_id: string }
+        Returns: undefined
+      }
       changer_role_membre: {
         Args: { p_membership_id: string; p_raison?: string; p_role_id: string }
+        Returns: undefined
+      }
+      changer_statut_inscription: {
+        Args: {
+          p_enrollment_id: string
+          p_raison?: string
+          p_statut: Database["public"]["Enums"]["enrollment_status"]
+        }
         Returns: undefined
       }
       changer_statut_membre: {
@@ -605,9 +1256,41 @@ export type Database = {
         }
         Returns: string
       }
+      definir_annee_courante: {
+        Args: { p_academic_year_id: string }
+        Returns: undefined
+      }
       definir_etablissements_membre: {
         Args: { p_establishment_ids: string[]; p_membership_id: string }
         Returns: undefined
+      }
+      inscrire_apprenant: {
+        Args: {
+          p_academic_year_id: string
+          p_birth_date?: string
+          p_class_id?: string
+          p_email?: string
+          p_establishment_id: string
+          p_family_name: string
+          p_gender_label?: string
+          p_given_name: string
+          p_learner_code?: string
+          p_level_id?: string
+          p_phone?: string
+          p_status?: Database["public"]["Enums"]["enrollment_status"]
+        }
+        Returns: string
+      }
+      reinscrire_apprenant: {
+        Args: {
+          p_academic_year_id: string
+          p_class_id?: string
+          p_establishment_id: string
+          p_learner_id: string
+          p_level_id?: string
+          p_status?: Database["public"]["Enums"]["enrollment_status"]
+        }
+        Returns: string
       }
       revoquer_invitation: {
         Args: { p_invitation_id: string }
@@ -615,6 +1298,16 @@ export type Database = {
       }
     }
     Enums: {
+      academic_year_status: "PLANNED" | "ACTIVE" | "CLOSED" | "ARCHIVED"
+      enrollment_status:
+        | "PREREGISTERED"
+        | "ENROLLED"
+        | "ACTIVE"
+        | "SUSPENDED"
+        | "TRANSFERRED"
+        | "GRADUATED"
+        | "DROPPED_OUT"
+        | "ARCHIVED"
       establishment_status: "ACTIVE" | "SUSPENDED" | "ARCHIVED"
       invitation_status: "PENDING" | "ACCEPTED" | "REVOKED" | "EXPIRED"
       membership_status: "ACTIVE" | "SUSPENDED"
@@ -624,6 +1317,7 @@ export type Database = {
         | "FAMILY_UPPER_GIVEN"
       organization_status: "TRIAL" | "ACTIVE" | "SUSPENDED" | "CLOSED"
       role_scope: "PLATFORM" | "ORGANIZATION" | "ESTABLISHMENT"
+      teacher_status: "ACTIVE" | "INACTIVE"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -734,6 +1428,17 @@ export type Enums<
 export const Constants = {
   public: {
     Enums: {
+      academic_year_status: ["PLANNED", "ACTIVE", "CLOSED", "ARCHIVED"],
+      enrollment_status: [
+        "PREREGISTERED",
+        "ENROLLED",
+        "ACTIVE",
+        "SUSPENDED",
+        "TRANSFERRED",
+        "GRADUATED",
+        "DROPPED_OUT",
+        "ARCHIVED",
+      ],
       establishment_status: ["ACTIVE", "SUSPENDED", "ARCHIVED"],
       invitation_status: ["PENDING", "ACCEPTED", "REVOKED", "EXPIRED"],
       membership_status: ["ACTIVE", "SUSPENDED"],
@@ -744,6 +1449,7 @@ export const Constants = {
       ],
       organization_status: ["TRIAL", "ACTIVE", "SUSPENDED", "CLOSED"],
       role_scope: ["PLATFORM", "ORGANIZATION", "ESTABLISHMENT"],
+      teacher_status: ["ACTIVE", "INACTIVE"],
     },
   },
 } as const
