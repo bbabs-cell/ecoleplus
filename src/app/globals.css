@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+/*
+ * Direction : premium, moderne, chaleureux (docs/design-guidelines.md).
+ * Le fond n'est pas blanc mais un papier chaud ; la profondeur vient d'ombres
+ * basses et de bordures franches, jamais de dégradés ni de verre.
+ */
+@theme inline {
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-carte: var(--carte);
+  --color-encre: var(--encre);
+  --color-encre-douce: var(--encre-douce);
+  --color-bordure: var(--bordure);
+  --color-primaire: var(--primaire);
+  --color-primaire-contraste: var(--primaire-contraste);
+  --color-primaire-douce: var(--primaire-douce);
+  --color-accent: var(--accent);
+  --color-accent-douce: var(--accent-douce);
+  --color-succes: var(--succes);
+  --color-succes-douce: var(--succes-douce);
+  --color-alerte: var(--alerte);
+  --color-alerte-douce: var(--alerte-douce);
+  --color-danger: var(--danger);
+  --color-danger-douce: var(--danger-douce);
+
+  --radius-douce: 0.625rem;
+  --shadow-carte: 0 1px 2px rgb(35 32 28 / 0.04), 0 1px 3px rgb(35 32 28 / 0.06);
+  --shadow-relief: 0 4px 12px rgb(35 32 28 / 0.08), 0 1px 3px rgb(35 32 28 / 0.05);
+}
+
+:root {
+  --surface: #faf7f2;
+  --surface-2: #f3eee5;
+  --carte: #ffffff;
+  --encre: #23201c;
+  --encre-douce: #6b6459;
+  --bordure: #e5ddd0;
+
+  --primaire: #1e5f57;
+  --primaire-contraste: #ffffff;
+  --primaire-douce: #e3efec;
+
+  --accent: #b2652f;
+  --accent-douce: #f7ece1;
+
+  --succes: #2f6b45;
+  --succes-douce: #e5f0e8;
+  --alerte: #8a5a12;
+  --alerte-douce: #faeed8;
+  --danger: #9b2f2f;
+  --danger-douce: #f8e6e4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface: #16140f;
+    --surface-2: #1e1b16;
+    --carte: #221e19;
+    --encre: #f2ece2;
+    --encre-douce: #a89e90;
+    --bordure: #35302a;
+
+    --primaire: #6fbdae;
+    --primaire-contraste: #10221f;
+    --primaire-douce: #1d332e;
+
+    --accent: #e0a069;
+    --accent-douce: #33261a;
+
+    --succes: #7dc298;
+    --succes-douce: #1b2c21;
+    --alerte: #dcae63;
+    --alerte-douce: #2e2515;
+    --danger: #e28b84;
+    --danger-douce: #331d1c;
+  }
+}
+
+body {
+  background-color: var(--surface);
+  color: var(--encre);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Focus toujours visible, y compris sur fond coloré (accessibilité). */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--primaire);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
