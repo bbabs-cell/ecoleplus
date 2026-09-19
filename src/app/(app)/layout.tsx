@@ -39,6 +39,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       ? [{ href: '/apprenants', libelle: 'Apprenants', icone: 'apprenants' } as const]
       : []),
 
+    ...(permissions.has('attendance.read')
+      ? [{ href: '/presences', libelle: 'Présences', icone: 'presences' } as const]
+      : []),
+
     ...(permissions.has('members.read')
       ? [{ href: '/membres', libelle: 'Membres', icone: 'membres', separateur: true } as const]
       : []),

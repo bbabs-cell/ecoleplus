@@ -34,6 +34,7 @@ export type Database = {
           position: number
           starts_on: string
           updated_at: string
+          weight: number
         }
         Insert: {
           academic_year_id: string
@@ -46,6 +47,7 @@ export type Database = {
           position: number
           starts_on: string
           updated_at?: string
+          weight?: number
         }
         Update: {
           academic_year_id?: string
@@ -58,6 +60,7 @@ export type Database = {
           position?: number
           starts_on?: string
           updated_at?: string
+          weight?: number
         }
         Relationships: [
           {
@@ -113,6 +116,291 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "establishments"
             referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
+      attendance_corrections: {
+        Row: {
+          changed_at: string
+          changed_by: string | null
+          id: number
+          new_status_id: string
+          old_status_id: string | null
+          organization_id: string
+          reason: string
+          record_id: string
+        }
+        Insert: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: never
+          new_status_id: string
+          old_status_id?: string | null
+          organization_id: string
+          reason: string
+          record_id: string
+        }
+        Update: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: never
+          new_status_id?: string
+          old_status_id?: string | null
+          organization_id?: string
+          reason?: string
+          record_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_corrections_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendance_corrections_record_id_organization_id_fkey"
+            columns: ["record_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "attendance_records"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
+      attendance_records: {
+        Row: {
+          comment: string | null
+          created_at: string
+          enrollment_id: string
+          id: string
+          justification_path: string | null
+          organization_id: string
+          recorded_at: string
+          recorded_by: string | null
+          session_id: string
+          status_id: string
+          updated_at: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          enrollment_id: string
+          id?: string
+          justification_path?: string | null
+          organization_id: string
+          recorded_at?: string
+          recorded_by?: string | null
+          session_id: string
+          status_id: string
+          updated_at?: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          enrollment_id?: string
+          id?: string
+          justification_path?: string | null
+          organization_id?: string
+          recorded_at?: string
+          recorded_by?: string | null
+          session_id?: string
+          status_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_records_enrollment_id_organization_id_fkey"
+            columns: ["enrollment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "attendance_records_recorded_by_fkey"
+            columns: ["recorded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendance_records_session_id_organization_id_fkey"
+            columns: ["session_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "attendance_sessions"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "attendance_records_status_id_organization_id_fkey"
+            columns: ["status_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "attendance_statuses"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
+      attendance_sessions: {
+        Row: {
+          academic_year_id: string
+          class_id: string
+          created_at: string
+          date_on: string
+          ends_at: string | null
+          establishment_id: string
+          id: string
+          kind_label: string | null
+          notes: string | null
+          organization_id: string
+          starts_at: string | null
+          status: Database["public"]["Enums"]["attendance_session_status"]
+          subject_id: string | null
+          teacher_id: string | null
+          updated_at: string
+          validated_at: string | null
+          validated_by: string | null
+        }
+        Insert: {
+          academic_year_id: string
+          class_id: string
+          created_at?: string
+          date_on: string
+          ends_at?: string | null
+          establishment_id: string
+          id?: string
+          kind_label?: string | null
+          notes?: string | null
+          organization_id: string
+          starts_at?: string | null
+          status?: Database["public"]["Enums"]["attendance_session_status"]
+          subject_id?: string | null
+          teacher_id?: string | null
+          updated_at?: string
+          validated_at?: string | null
+          validated_by?: string | null
+        }
+        Update: {
+          academic_year_id?: string
+          class_id?: string
+          created_at?: string
+          date_on?: string
+          ends_at?: string | null
+          establishment_id?: string
+          id?: string
+          kind_label?: string | null
+          notes?: string | null
+          organization_id?: string
+          starts_at?: string | null
+          status?: Database["public"]["Enums"]["attendance_session_status"]
+          subject_id?: string | null
+          teacher_id?: string | null
+          updated_at?: string
+          validated_at?: string | null
+          validated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_sessions_academic_year_id_establishment_id_fkey"
+            columns: ["academic_year_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id", "establishment_id"]
+          },
+          {
+            foreignKeyName: "attendance_sessions_class_id_academic_year_id_fkey"
+            columns: ["class_id", "academic_year_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id", "academic_year_id"]
+          },
+          {
+            foreignKeyName: "attendance_sessions_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "attendance_sessions_subject_id_establishment_id_fkey"
+            columns: ["subject_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id", "establishment_id"]
+          },
+          {
+            foreignKeyName: "attendance_sessions_teacher_id_establishment_id_fkey"
+            columns: ["teacher_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "teachers"
+            referencedColumns: ["id", "establishment_id"]
+          },
+          {
+            foreignKeyName: "attendance_sessions_validated_by_fkey"
+            columns: ["validated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      attendance_statuses: {
+        Row: {
+          code: string
+          color: string | null
+          counts_absent: boolean
+          created_at: string
+          establishment_id: string | null
+          id: string
+          is_active: boolean
+          is_present: boolean
+          name: string
+          organization_id: string
+          position: number
+          requires_justification: boolean
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          color?: string | null
+          counts_absent?: boolean
+          created_at?: string
+          establishment_id?: string | null
+          id?: string
+          is_active?: boolean
+          is_present?: boolean
+          name: string
+          organization_id: string
+          position?: number
+          requires_justification?: boolean
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          color?: string | null
+          counts_absent?: boolean
+          created_at?: string
+          establishment_id?: string | null
+          id?: string
+          is_active?: boolean
+          is_present?: boolean
+          name?: string
+          organization_id?: string
+          position?: number
+          requires_justification?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_statuses_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "attendance_statuses_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1235,6 +1523,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      corriger_presence: {
+        Args: { p_new_status_id: string; p_raison: string; p_record_id: string }
+        Returns: undefined
+      }
       creer_invitation: {
         Args: {
           p_email: string
@@ -1263,6 +1555,10 @@ export type Database = {
       definir_etablissements_membre: {
         Args: { p_establishment_ids: string[]; p_membership_id: string }
         Returns: undefined
+      }
+      enregistrer_appel: {
+        Args: { p_lignes: Json; p_session_id: string }
+        Returns: number
       }
       inscrire_apprenant: {
         Args: {
@@ -1296,9 +1592,15 @@ export type Database = {
         Args: { p_invitation_id: string }
         Returns: undefined
       }
+      rouvrir_seance: {
+        Args: { p_raison: string; p_session_id: string }
+        Returns: undefined
+      }
+      valider_seance: { Args: { p_session_id: string }; Returns: undefined }
     }
     Enums: {
       academic_year_status: "PLANNED" | "ACTIVE" | "CLOSED" | "ARCHIVED"
+      attendance_session_status: "OPEN" | "VALIDATED"
       enrollment_status:
         | "PREREGISTERED"
         | "ENROLLED"
@@ -1429,6 +1731,7 @@ export const Constants = {
   public: {
     Enums: {
       academic_year_status: ["PLANNED", "ACTIVE", "CLOSED", "ARCHIVED"],
+      attendance_session_status: ["OPEN", "VALIDATED"],
       enrollment_status: [
         "PREREGISTERED",
         "ENROLLED",

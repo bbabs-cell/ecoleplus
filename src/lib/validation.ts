@@ -220,3 +220,32 @@ export const affectationSchema = z.object({
   enseignantId: z.string().uuid('Sélectionnez un enseignant'),
 });
 export type SaisieAffectation = z.infer<typeof affectationSchema>;
+
+// ---------------------------------------------------------------------------
+// Présences (phase 3a)
+// ---------------------------------------------------------------------------
+
+export const seanceSchema = z
+  .object({
+    classeId: z.string().uuid('Sélectionnez une classe'),
+    date: dateIso,
+    matiereId: z.union([z.string().uuid(), z.literal('')]).optional(),
+    enseignantId: z.union([z.string().uuid(), z.literal('')]).optional(),
+    type: texteCourt.max(40).optional().or(z.literal('')),
+    debut: z.union([texteCourt.regex(/^\d{2}:\d{2}$/, 'Heure invalide'), z.literal('')]).optional(),
+    fin: z.union([texteCourt.regex(/^\d{2}:\d{2}$/, 'Heure invalide'), z.literal('')]).optional(),
+  })
+  .refine(
+    (v) => !v.debut || !v.fin || v.fin > v.debut,
+    { message: 'La fin doit être postérieure au début', path: ['fin'] },
+  );
+export type SaisieSeance = z.infer<typeof seanceSchema>;
+
+export const statutPresenceSchema = z.object({
+  nom: texteCourt.min(1, 'Nom requis').max(60),
+  code: codeReferentielSchema,
+  estPresent: z.coerce.boolean(),
+  compteAbsence: z.coerce.boolean(),
+  exigeJustificatif: z.coerce.boolean(),
+});
+export type SaisieStatutPresence = z.infer<typeof statutPresenceSchema>;

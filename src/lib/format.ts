@@ -77,3 +77,24 @@ export function formaterDateHeure(valeur: string | Date, reglages: ReglagesForma
     timeStyle: 'short',
   }).format(date);
 }
+
+/**
+ * Jour courant au format ISO, dans le fuseau de l'organisation.
+ *
+ * Le serveur tourne en UTC : proposer sa date comme date d'appel décalerait la
+ * feuille d'un jour pour toute organisation suffisamment à l'est ou à l'ouest.
+ */
+export function jourCourantIso(timezone: string): string {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: timezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date());
+}
+
+/** Heure d'une colonne `time` PostgreSQL (`08:30:00`) ramenée à `08:30`. */
+export function formaterHeure(valeur: string | null): string {
+  if (!valeur) return '';
+  return valeur.slice(0, 5);
+}

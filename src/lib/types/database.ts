@@ -52,3 +52,14 @@ export type Classe = Tables<'classes'>;
 export type Group = Tables<'groups'>;
 export type GroupMember = Tables<'group_members'>;
 export type TeachingAssignment = Tables<'teaching_assignments'>;
+
+// ---------------------------------------------------------------------------
+// Présences (phase 3a)
+// ---------------------------------------------------------------------------
+
+export type AttendanceSessionStatus = Enums<'attendance_session_status'>;
+
+export type AttendanceStatus = Tables<'attendance_statuses'>;
+export type AttendanceSession = Tables<'attendance_sessions'>;
+export type AttendanceRecord = Tables<'attendance_records'>;
+export type AttendanceCorrection = Tables<'attendance_corrections'>;
