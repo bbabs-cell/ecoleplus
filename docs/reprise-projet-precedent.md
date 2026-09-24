@@ -100,3 +100,31 @@ dont `APP_KEY`, les identifiants de base de données, `MAIL_PASSWORD` et
 
 **Ces identifiants sont à considérer comme exposés** et à révoquer si l'archive a
 circulé ou a été versionnée.
+
+## Mise à jour — fin de la phase 3
+
+Trois des sept manques relevés plus haut sont désormais comblés, et les cinq
+scénarios de sécurité qui relevaient de phases non construites sont passés à
+trois.
+
+| # | Manque | État |
+|---|---|---|
+| 2 | Coefficients par matière | comblé : `class_subjects` (phase 3b) |
+| 3 | Pondération des périodes | comblé : `academic_terms.weight` (phase 3a) |
+| 7 | Réglages par établissement | comblé : `establishment_settings` (phase 3b) |
+| 1 | Responsables légaux | à trancher |
+| 4 | Chaînage des inscriptions | à trancher |
+| 5 | Numéro d'inscription | à trancher |
+| 6 | Historique des changements de classe | à trancher |
+
+| # | Scénario | État |
+|---|---|---|
+| 3 | Modification d'une note sans permission | couvert (`securite_notation`) |
+| 4 | Modification d'une note publiée hors procédure | couvert (`securite_notation`) |
+| 10 | Barème modifié après publication | couvert (`securite_notation`) |
+| 5 | Annulation de reçu sans permission | phase 4 |
+| 7 | Téléchargement d'un document non autorisé | phase 5 |
+
+Le manque n° 2 a été comblé sans attendre les parcours : `class_subjects`
+rattache le coefficient à la classe. Quand `programs` arrivera, la table se
+laissera surcharger sans migration destructrice.
