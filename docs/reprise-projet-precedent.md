@@ -42,7 +42,9 @@ Et quelques décisions structurantes, déjà appliquées ou désormais actées :
 Une piste retenue pour la phase 5 : l'internationalisation y était faite sans
 bibliothèque, la **clé de traduction étant la chaîne française exacte**, avec
 repli sur la clé. L'interface reste donc lisible même quand une traduction
-manque — propriété que peu de solutions offrent.
+manque — propriété que peu de solutions offrent. **Reprise telle quelle en
+phase 5** : `src/i18n/dictionnaires.ts` n'a pas de dictionnaire `fr`, puisque
+la clé EST le français.
 
 ## Manques que cette lecture révèle dans la version actuelle
 
@@ -155,3 +157,28 @@ vérifiable par une suite `.sql` ordinaire :
   l'argent change de forme, et `npm test` l'éprouve : conversions exactes,
   refus d'une saisie plus précise que la devise, et aller-retour sans dérive
   sur des dizaines de milliers de montants.
+
+## Mise à jour — fin de la phase 5
+
+Le scénario n° 7 est couvert. **Les douze scénarios de sécurité de la
+conception antérieure le sont désormais tous.**
+
+| # | Scénario | État |
+|---|---|---|
+| 7 | Téléchargement d'un document non autorisé | couvert (`securite_fichiers`) |
+
+Trois barrières le ferment, dans cet ordre : la RLS rend le fichier invisible,
+`fichier_telechargeable` refuse de livrer sa clé, et l'URL signée ne vaut
+qu'une minute. Le message d'erreur ne distingue jamais « inexistant » de
+« interdit » — confirmer qu'un document existe ailleurs est déjà une fuite.
+
+Une décision à noter : **la signature SigV4 est écrite à la main**, plutôt que
+tirée du SDK AWS. L'algorithme est entièrement spécifié, il tient en une
+centaine de lignes, et AWS publie un vecteur de test qui permet de prouver
+l'implémentation exacte — ce que `src/lib/__tests__/signature.test.ts` fait.
+Réimplémenter de la cryptographie ne se justifie que si l'on peut démontrer
+qu'on l'a réimplémentée juste.
+
+Reste en suspens, hors des scénarios : le dépôt réel dans R2 n'a pas été
+éprouvé de bout en bout, faute d'identification Cloudflare dans
+l'environnement de développement. L'interface le dit plutôt que de le taire.

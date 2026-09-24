@@ -159,7 +159,7 @@ export default async function PageEvaluations({
 
                   <Etiquette ton={statut.ton}>
                     {evaluation.status === 'PUBLISHED' ? (
-                      <Lock className="mr-1 size-3" aria-hidden="true" />
+                      <Lock className="me-1 size-3" aria-hidden="true" />
                     ) : null}
                     {statut.libelle}
                   </Etiquette>

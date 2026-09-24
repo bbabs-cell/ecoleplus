@@ -5,6 +5,9 @@ import { exigerOrganisation } from '@/services/permissions';
 import { deconnexionAction } from '@/services/auth.actions';
 import { nomAffiche, initiales } from '@/lib/format';
 import { Navigation, type EntreeNavigation } from '@/components/coque/navigation';
+import { SelecteurLangue } from '@/components/i18n/selecteur-langue';
+import { localeActive } from '@/i18n/serveur';
+import { traduire } from '@/i18n/dictionnaires';
 import { SelecteurEtablissement } from '@/components/coque/selecteur-etablissement';
 import { Etiquette } from '@/components/ui/etiquette';
 
@@ -70,11 +73,19 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       : []),
   ];
 
+  // Les libellés sont traduits ICI, côté serveur : la navigation reçoit du
+  // texte prêt à afficher et n'a pas besoin de connaître la langue.
+  const locale = await localeActive();
+  const entreesTraduites = entrees.map((entree) => ({
+    ...entree,
+    libelle: traduire(entree.libelle, locale),
+  }));
+
   const nom = nomAffiche(profil, reglages.name_display_format);
 
   return (
     <div className="flex min-h-dvh flex-col lg:flex-row">
-      <aside className="flex shrink-0 flex-col gap-4 border-b border-bordure bg-surface-2/60 p-4 lg:h-dvh lg:w-64 lg:border-r lg:border-b-0">
+      <aside className="flex shrink-0 flex-col gap-4 border-b border-bordure bg-surface-2/60 p-4 lg:h-dvh lg:w-64 lg:border-e lg:border-b-0">
         <Link href="/tableau-de-bord" className="flex items-center gap-2.5">
           <span className="flex size-8 items-center justify-center rounded-douce bg-primaire text-primaire-contraste">
             <GraduationCap className="size-4" aria-hidden="true" />
@@ -97,7 +108,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         />
 
         <div className="lg:flex-1">
-          <Navigation entrees={entrees} />
+          <Navigation
+            entrees={entreesTraduites}
+            libelleNavigation={traduire('Navigation principale', locale)}
+          />
+        </div>
+
+        <div className="border-t border-bordure pt-3">
+          <SelecteurLangue locale={locale} />
         </div>
 
         <div className="flex items-center gap-2.5 border-t border-bordure pt-3">
@@ -115,8 +133,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             <button
               type="submit"
               className="rounded-douce p-2 text-encre-douce transition-colors hover:bg-surface-2 hover:text-encre"
-              aria-label="Se déconnecter"
-              title="Se déconnecter"
+              aria-label={traduire('Se déconnecter', locale)}
+              title={traduire('Se déconnecter', locale)}
             >
               <LogOut className="size-4" aria-hidden="true" />
             </button>

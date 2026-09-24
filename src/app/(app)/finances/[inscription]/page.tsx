@@ -148,7 +148,7 @@ export default async function PageDossierFinancier({
                 <p className="text-lg font-semibold tabular-nums text-encre">
                   {situation.creances}
                   {situation.enRetard > 0 ? (
-                    <span className="ml-1.5 inline-flex items-center gap-1 text-xs font-normal text-alerte">
+                    <span className="ms-1.5 inline-flex items-center gap-1 text-xs font-normal text-alerte">
                       <TriangleAlert className="size-3" aria-hidden="true" />
                       {situation.enRetard} en retard
                     </span>
@@ -185,12 +185,12 @@ export default async function PageDossierFinancier({
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-bordure text-left text-xs uppercase tracking-wide text-encre-douce">
+                  <tr className="border-b border-bordure text-start text-xs uppercase tracking-wide text-encre-douce">
                     <th scope="col" className="px-5 py-3 font-medium">Libellé</th>
                     <th scope="col" className="px-3 py-3 font-medium">Échéance</th>
-                    <th scope="col" className="px-3 py-3 text-right font-medium">Dû</th>
-                    <th scope="col" className="px-3 py-3 text-right font-medium">Réglé</th>
-                    <th scope="col" className="px-5 py-3 text-right font-medium">Statut</th>
+                    <th scope="col" className="px-3 py-3 text-end font-medium">Dû</th>
+                    <th scope="col" className="px-3 py-3 text-end font-medium">Réglé</th>
+                    <th scope="col" className="px-5 py-3 text-end font-medium">Statut</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -203,10 +203,10 @@ export default async function PageDossierFinancier({
 
                     return (
                       <tr key={creance.id} className="border-b border-bordure last:border-b-0">
-                        <th scope="row" className="px-5 py-3 text-left font-medium text-encre">
+                        <th scope="row" className="px-5 py-3 text-start font-medium text-encre">
                           {creance.label}
                           {creance.discount_minor > 0 ? (
-                            <span className="ml-2 text-xs font-normal text-encre-douce">
+                            <span className="ms-2 text-xs font-normal text-encre-douce">
                               remise {formaterMontant(creance.discount_minor, creance.currency)}
                             </span>
                           ) : null}
@@ -219,16 +219,16 @@ export default async function PageDossierFinancier({
                         <td className="px-3 py-3 text-encre-douce">
                           {formaterDate(`${creance.due_on}T12:00:00Z`, contexte.reglages)}
                           {enRetard ? (
-                            <span className="ml-1.5 text-xs font-medium text-alerte">en retard</span>
+                            <span className="ms-1.5 text-xs font-medium text-alerte">en retard</span>
                           ) : null}
                         </td>
-                        <td className="px-3 py-3 text-right tabular-nums text-encre">
+                        <td className="px-3 py-3 text-end tabular-nums text-encre">
                           {formaterMontant(creance.total_minor, creance.currency)}
                         </td>
-                        <td className="px-3 py-3 text-right tabular-nums text-encre-douce">
+                        <td className="px-3 py-3 text-end tabular-nums text-encre-douce">
                           {formaterMontant(creance.paid_minor, creance.currency)}
                         </td>
-                        <td className="px-5 py-3 text-right">
+                        <td className="px-5 py-3 text-end">
                           <Etiquette ton={statut.ton}>{statut.libelle}</Etiquette>
                         </td>
                       </tr>
@@ -269,7 +269,7 @@ export default async function PageDossierFinancier({
                 <div className="min-w-0 flex-1">
                   <p className="font-medium text-encre">
                     {formaterMontant(paiement.amount_minor, paiement.currency)}
-                    <span className="ml-2 font-normal text-encre-douce">
+                    <span className="ms-2 font-normal text-encre-douce">
                       {paiement.method_label}
                     </span>
                   </p>

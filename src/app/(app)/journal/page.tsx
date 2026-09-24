@@ -64,7 +64,7 @@ export default async function PageJournal({
                   <span className="text-xs text-encre-douce">
                     par {entree.actor_label ?? 'système'}
                   </span>
-                  <span className="ml-auto text-xs tabular-nums text-encre-douce">
+                  <span className="ms-auto text-xs tabular-nums text-encre-douce">
                     {formaterDateHeure(entree.occurred_at, contexte.reglages)}
                   </span>
                   {entree.reason ? (

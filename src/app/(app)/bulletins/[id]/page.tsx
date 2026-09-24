@@ -57,7 +57,7 @@ export default async function PageBulletin({ params }: { params: Promise<{ id: s
         </div>
         {publie ? (
           <Etiquette ton="succes">
-            <Lock className="mr-1 size-3" aria-hidden="true" />
+            <Lock className="me-1 size-3" aria-hidden="true" />
             Publié
           </Etiquette>
         ) : (
@@ -90,20 +90,20 @@ export default async function PageBulletin({ params }: { params: Promise<{ id: s
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-bordure text-left text-xs uppercase tracking-wide text-encre-douce">
+                  <tr className="border-b border-bordure text-start text-xs uppercase tracking-wide text-encre-douce">
                     <th scope="col" className="px-5 py-3 font-medium">
                       Matière
                     </th>
-                    <th scope="col" className="px-3 py-3 text-right font-medium">
+                    <th scope="col" className="px-3 py-3 text-end font-medium">
                       Coef.
                     </th>
-                    <th scope="col" className="px-3 py-3 text-right font-medium">
+                    <th scope="col" className="px-3 py-3 text-end font-medium">
                       Moyenne
                     </th>
                     <th scope="col" className="px-3 py-3 font-medium">
                       Appréciation
                     </th>
-                    <th scope="col" className="px-5 py-3 text-right font-medium">
+                    <th scope="col" className="px-5 py-3 text-end font-medium">
                       Notes
                     </th>
                   </tr>
@@ -111,13 +111,13 @@ export default async function PageBulletin({ params }: { params: Promise<{ id: s
                 <tbody>
                   {instantane.matieres.map((matiere) => (
                     <tr key={matiere.subject_id} className="border-b border-bordure last:border-b-0">
-                      <th scope="row" className="px-5 py-3 text-left font-medium text-encre">
+                      <th scope="row" className="px-5 py-3 text-start font-medium text-encre">
                         {matiere.nom}
                       </th>
-                      <td className="px-3 py-3 text-right tabular-nums text-encre-douce">
+                      <td className="px-3 py-3 text-end tabular-nums text-encre-douce">
                         {matiere.coefficient ?? '—'}
                       </td>
-                      <td className="px-3 py-3 text-right">
+                      <td className="px-3 py-3 text-end">
                         {matiere.valeur === null ? (
                           <span className="text-encre-douce">Non calculable</span>
                         ) : (
@@ -127,7 +127,7 @@ export default async function PageBulletin({ params }: { params: Promise<{ id: s
                         )}
                       </td>
                       <td className="px-3 py-3 text-encre-douce">{matiere.mention ?? '—'}</td>
-                      <td className="px-5 py-3 text-right text-xs text-encre-douce">
+                      <td className="px-5 py-3 text-end text-xs text-encre-douce">
                         {matiere.notes_prises ?? 0} prise
                         {(matiere.notes_prises ?? 0) > 1 ? 's' : ''}
                         {(matiere.notes_ignorees ?? 0) > 0
@@ -157,7 +157,7 @@ export default async function PageBulletin({ params }: { params: Promise<{ id: s
 
           {/* Le rang n'apparaît que si l'établissement l'a demandé. */}
           {fiche.rank !== null ? (
-            <div className="text-right">
+            <div className="text-end">
               <p className="text-sm text-encre-douce">Rang</p>
               <p className="text-3xl font-semibold tabular-nums text-encre">
                 {fiche.rank}

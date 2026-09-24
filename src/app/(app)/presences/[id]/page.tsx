@@ -65,7 +65,7 @@ export default async function PageSeance({ params }: { params: Promise<{ id: str
         </div>
         {close ? (
           <Etiquette ton="succes">
-            <Lock className="mr-1 size-3" aria-hidden="true" />
+            <Lock className="me-1 size-3" aria-hidden="true" />
             Validée
           </Etiquette>
         ) : (

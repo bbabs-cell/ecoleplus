@@ -140,7 +140,7 @@ export default async function PageFinances({
                     <p className="font-medium text-encre">
                       {nomAffiche(solde.apprenant, format)}
                       {solde.apprenant.learner_code ? (
-                        <span className="ml-2 rounded bg-surface-2 px-1.5 py-0.5 font-mono text-xs text-encre-douce">
+                        <span className="ms-2 rounded bg-surface-2 px-1.5 py-0.5 font-mono text-xs text-encre-douce">
                           {solde.apprenant.learner_code}
                         </span>
                       ) : null}
@@ -150,7 +150,7 @@ export default async function PageFinances({
                         ? 'Aucune créance'
                         : `${formaterMontant(solde.regle, solde.devise)} réglés sur ${formaterMontant(solde.du, solde.devise)}`}
                       {solde.enRetard > 0 ? (
-                        <span className="ml-2 font-medium text-alerte">
+                        <span className="ms-2 font-medium text-alerte">
                           {solde.enRetard} échéance{solde.enRetard > 1 ? 's' : ''} en retard
                         </span>
                       ) : null}

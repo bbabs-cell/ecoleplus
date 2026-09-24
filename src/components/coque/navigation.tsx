@@ -56,11 +56,17 @@ const ICONES = {
  * composant ne fait qu'afficher ce qu'on lui donne. Masquer un lien reste du
  * confort — l'accès réel est refusé par RLS et par les gardes serveur.
  */
-export function Navigation({ entrees }: { entrees: EntreeNavigation[] }) {
+export function Navigation({
+  entrees,
+  libelleNavigation = 'Navigation principale',
+}: {
+  entrees: EntreeNavigation[];
+  libelleNavigation?: string;
+}) {
   const chemin = usePathname();
 
   return (
-    <nav aria-label="Navigation principale" className="space-y-0.5">
+    <nav aria-label={libelleNavigation} className="space-y-0.5">
       {entrees.map((entree) => {
         const Icone = ICONES[entree.icone];
         const actif = chemin === entree.href || chemin.startsWith(`${entree.href}/`);

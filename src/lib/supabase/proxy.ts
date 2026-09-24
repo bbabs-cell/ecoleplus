@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { envPublic } from '@/lib/env';
+import { COOKIE_LANGUE, estLocaleConnue, normaliserLocale } from '@/i18n/locales';
 import type { Database } from '@/lib/types/database';
 
 /** Routes accessibles sans session. Tout le reste exige une authentification. */
@@ -54,6 +55,35 @@ export async function actualiserSession(requete: NextRequest): Promise<NextRespo
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  // La langue de l'organisation voyage dans le jeton (claim `locale`, posé par
+  // le hook d'émission). On la recopie ici dans un cookie lisible, pour que
+  // `<html lang dir>` soit juste dès la première requête : la mise en page
+  // racine s'exécute avant tout contexte applicatif et ne peut pas interroger
+  // la base.
+  //
+  // `getClaims()` et non `user.app_metadata` : les claims du hook sont posés à
+  // la RACINE du jeton, pas dans `app_metadata`, et `getClaims()` est la seule
+  // méthode qui les rende après vérification de la signature.
+  //
+  // Le choix explicite de l'utilisateur prime : s'il a déjà posé un cookie, on
+  // n'y touche pas.
+  if (user && !requete.cookies.has(COOKIE_LANGUE)) {
+    const { data: jeton } = await supabase.auth.getClaims();
+    const revendiquee = jeton?.claims['locale'];
+    const locale = normaliserLocale(typeof revendiquee === 'string' ? revendiquee : undefined);
+
+    if (estLocaleConnue(locale)) {
+      reponse.cookies.set(COOKIE_LANGUE, locale, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 365,
+        sameSite: 'lax',
+        // Aucune décision de sécurité ne repose dessus : le falsifier ne
+        // change que la langue d'affichage.
+        httpOnly: false,
+      });
+    }
+  }
 
   const chemin = requete.nextUrl.pathname;
 

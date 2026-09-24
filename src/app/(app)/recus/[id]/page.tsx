@@ -65,7 +65,7 @@ export default async function PageRecu({ params }: { params: Promise<{ id: strin
                 {contexte.etablissementActif.name}
               </h1>
             </div>
-            <div className="text-right">
+            <div className="text-end">
               <p className="text-xs uppercase tracking-wide text-encre-douce">Reçu n°</p>
               <p className="font-mono text-lg font-semibold text-encre">{fiche.number}</p>
               {annule ? (
@@ -83,7 +83,7 @@ export default async function PageRecu({ params }: { params: Promise<{ id: strin
               <dd className="font-medium text-encre">
                 {apprenant ? nomAffiche(apprenant, format) : 'Apprenant inconnu'}
                 {apprenant?.learner_code ? (
-                  <span className="ml-2 font-mono text-xs text-encre-douce">
+                  <span className="ms-2 font-mono text-xs text-encre-douce">
                     {apprenant.learner_code}
                   </span>
                 ) : null}
@@ -106,7 +106,7 @@ export default async function PageRecu({ params }: { params: Promise<{ id: strin
               <dd className="text-encre">
                 {paiement?.method_label ?? '—'}
                 {paiement?.reference ? (
-                  <span className="ml-2 font-mono text-xs text-encre-douce">
+                  <span className="ms-2 font-mono text-xs text-encre-douce">
                     {paiement.reference}
                   </span>
                 ) : null}

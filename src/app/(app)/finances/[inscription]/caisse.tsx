@@ -199,7 +199,7 @@ export function Caisse({
                           className="min-w-0 flex-1 text-sm text-encre"
                         >
                           {creance.label}
-                          <span className="ml-2 text-xs text-encre-douce">
+                          <span className="ms-2 text-xs text-encre-douce">
                             reste {formaterMontant(reste, devise)}
                           </span>
                         </label>

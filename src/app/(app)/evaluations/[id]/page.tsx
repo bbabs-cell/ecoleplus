@@ -74,7 +74,7 @@ export default async function PageEvaluation({ params }: { params: Promise<{ id:
         </div>
         {publiee ? (
           <Etiquette ton="succes">
-            <Lock className="mr-1 size-3" aria-hidden="true" />
+            <Lock className="me-1 size-3" aria-hidden="true" />
             Publiée
           </Etiquette>
         ) : (
