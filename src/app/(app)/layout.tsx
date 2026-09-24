@@ -43,6 +43,18 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       ? [{ href: '/presences', libelle: 'Présences', icone: 'presences' } as const]
       : []),
 
+    ...(permissions.has('grades.read')
+      ? [
+          { href: '/evaluations', libelle: 'Évaluations', icone: 'evaluations' } as const,
+          { href: '/baremes', libelle: 'Barèmes', icone: 'baremes' } as const,
+        ]
+      : []),
+    // Les bulletins ont leur propre permission : consulter les notes et
+    // consulter un bulletin remis ne sont pas le même droit.
+    ...(permissions.has('reports.read')
+      ? [{ href: '/bulletins', libelle: 'Bulletins', icone: 'bulletins' } as const]
+      : []),
+
     ...(permissions.has('members.read')
       ? [{ href: '/membres', libelle: 'Membres', icone: 'membres', separateur: true } as const]
       : []),

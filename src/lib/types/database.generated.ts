@@ -119,6 +119,296 @@ export type Database = {
           },
         ]
       }
+      assessment_result_histories: {
+        Row: {
+          action: string
+          changed_at: string
+          changed_by: string | null
+          id: number
+          new_value: Json | null
+          old_value: Json | null
+          organization_id: string
+          reason: string | null
+          result_id: string
+        }
+        Insert: {
+          action: string
+          changed_at?: string
+          changed_by?: string | null
+          id?: never
+          new_value?: Json | null
+          old_value?: Json | null
+          organization_id: string
+          reason?: string | null
+          result_id: string
+        }
+        Update: {
+          action?: string
+          changed_at?: string
+          changed_by?: string | null
+          id?: never
+          new_value?: Json | null
+          old_value?: Json | null
+          organization_id?: string
+          reason?: string | null
+          result_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessment_result_histories_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assessment_result_histories_result_id_organization_id_fkey"
+            columns: ["result_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "assessment_results"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
+      assessment_results: {
+        Row: {
+          assessment_id: string
+          comment: string | null
+          created_at: string
+          enrollment_id: string
+          entered_at: string | null
+          entered_by: string | null
+          id: string
+          kind: Database["public"]["Enums"]["grade_kind"]
+          normalized_value: number | null
+          organization_id: string
+          published_at: string | null
+          raw_value: number | null
+          scale_id: string | null
+          status: Database["public"]["Enums"]["grade_status"]
+          updated_at: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          assessment_id: string
+          comment?: string | null
+          created_at?: string
+          enrollment_id: string
+          entered_at?: string | null
+          entered_by?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["grade_kind"]
+          normalized_value?: number | null
+          organization_id: string
+          published_at?: string | null
+          raw_value?: number | null
+          scale_id?: string | null
+          status?: Database["public"]["Enums"]["grade_status"]
+          updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          assessment_id?: string
+          comment?: string | null
+          created_at?: string
+          enrollment_id?: string
+          entered_at?: string | null
+          entered_by?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["grade_kind"]
+          normalized_value?: number | null
+          organization_id?: string
+          published_at?: string | null
+          raw_value?: number | null
+          scale_id?: string | null
+          status?: Database["public"]["Enums"]["grade_status"]
+          updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessment_results_assessment_id_organization_id_fkey"
+            columns: ["assessment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "assessment_results_enrollment_id_organization_id_fkey"
+            columns: ["enrollment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "assessment_results_entered_by_fkey"
+            columns: ["entered_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assessment_results_scale_id_organization_id_fkey"
+            columns: ["scale_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "grading_scales"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "assessment_results_verified_by_fkey"
+            columns: ["verified_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assessments: {
+        Row: {
+          academic_term_id: string | null
+          academic_year_id: string
+          category_id: string | null
+          class_id: string
+          coefficient: number
+          created_at: string
+          created_by: string | null
+          date_on: string
+          description: string | null
+          establishment_id: string
+          grading_system_id: string
+          id: string
+          missing_grade_policy: Database["public"]["Enums"]["missing_grade_policy"]
+          organization_id: string
+          published_at: string | null
+          published_by: string | null
+          status: Database["public"]["Enums"]["assessment_status"]
+          subject_id: string
+          teacher_id: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          academic_term_id?: string | null
+          academic_year_id: string
+          category_id?: string | null
+          class_id: string
+          coefficient?: number
+          created_at?: string
+          created_by?: string | null
+          date_on: string
+          description?: string | null
+          establishment_id: string
+          grading_system_id: string
+          id?: string
+          missing_grade_policy?: Database["public"]["Enums"]["missing_grade_policy"]
+          organization_id: string
+          published_at?: string | null
+          published_by?: string | null
+          status?: Database["public"]["Enums"]["assessment_status"]
+          subject_id: string
+          teacher_id?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          academic_term_id?: string | null
+          academic_year_id?: string
+          category_id?: string | null
+          class_id?: string
+          coefficient?: number
+          created_at?: string
+          created_by?: string | null
+          date_on?: string
+          description?: string | null
+          establishment_id?: string
+          grading_system_id?: string
+          id?: string
+          missing_grade_policy?: Database["public"]["Enums"]["missing_grade_policy"]
+          organization_id?: string
+          published_at?: string | null
+          published_by?: string | null
+          status?: Database["public"]["Enums"]["assessment_status"]
+          subject_id?: string
+          teacher_id?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessments_academic_term_id_organization_id_fkey"
+            columns: ["academic_term_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "academic_terms"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "assessments_academic_year_id_establishment_id_fkey"
+            columns: ["academic_year_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id", "establishment_id"]
+          },
+          {
+            foreignKeyName: "assessments_category_id_organization_id_fkey"
+            columns: ["category_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "grading_categories"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "assessments_class_id_academic_year_id_fkey"
+            columns: ["class_id", "academic_year_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id", "academic_year_id"]
+          },
+          {
+            foreignKeyName: "assessments_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assessments_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "assessments_grading_system_id_organization_id_fkey"
+            columns: ["grading_system_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "grading_systems"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "assessments_published_by_fkey"
+            columns: ["published_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assessments_subject_id_establishment_id_fkey"
+            columns: ["subject_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id", "establishment_id"]
+          },
+          {
+            foreignKeyName: "assessments_teacher_id_establishment_id_fkey"
+            columns: ["teacher_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "teachers"
+            referencedColumns: ["id", "establishment_id"]
+          },
+        ]
+      }
       attendance_corrections: {
         Row: {
           changed_at: string
@@ -474,6 +764,77 @@ export type Database = {
           },
         ]
       }
+      class_subjects: {
+        Row: {
+          class_id: string
+          coefficient: number
+          created_at: string
+          establishment_id: string
+          grading_system_id: string | null
+          id: string
+          is_active: boolean
+          organization_id: string
+          position: number
+          subject_id: string
+          updated_at: string
+        }
+        Insert: {
+          class_id: string
+          coefficient?: number
+          created_at?: string
+          establishment_id: string
+          grading_system_id?: string | null
+          id?: string
+          is_active?: boolean
+          organization_id: string
+          position?: number
+          subject_id: string
+          updated_at?: string
+        }
+        Update: {
+          class_id?: string
+          coefficient?: number
+          created_at?: string
+          establishment_id?: string
+          grading_system_id?: string | null
+          id?: string
+          is_active?: boolean
+          organization_id?: string
+          position?: number
+          subject_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_subjects_class_id_establishment_id_fkey"
+            columns: ["class_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id", "establishment_id"]
+          },
+          {
+            foreignKeyName: "class_subjects_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "class_subjects_grading_system_id_organization_id_fkey"
+            columns: ["grading_system_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "grading_systems"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "class_subjects_subject_id_establishment_id_fkey"
+            columns: ["subject_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id", "establishment_id"]
+          },
+        ]
+      }
       classes: {
         Row: {
           academic_year_id: string
@@ -481,6 +842,7 @@ export type Database = {
           code: string
           created_at: string
           establishment_id: string
+          grading_system_id: string | null
           id: string
           is_active: boolean
           level_id: string
@@ -495,6 +857,7 @@ export type Database = {
           code: string
           created_at?: string
           establishment_id: string
+          grading_system_id?: string | null
           id?: string
           is_active?: boolean
           level_id: string
@@ -509,6 +872,7 @@ export type Database = {
           code?: string
           created_at?: string
           establishment_id?: string
+          grading_system_id?: string | null
           id?: string
           is_active?: boolean
           level_id?: string
@@ -530,6 +894,13 @@ export type Database = {
             columns: ["establishment_id", "organization_id"]
             isOneToOne: false
             referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "classes_grading_system_fkey"
+            columns: ["grading_system_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "grading_systems"
             referencedColumns: ["id", "organization_id"]
           },
           {
@@ -632,6 +1003,38 @@ export type Database = {
           },
         ]
       }
+      establishment_settings: {
+        Row: {
+          establishment_id: string
+          key: string
+          organization_id: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          establishment_id: string
+          key: string
+          organization_id: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          establishment_id?: string
+          key?: string
+          organization_id?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "establishment_settings_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
       establishment_users: {
         Row: {
           created_at: string
@@ -720,6 +1123,197 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "establishments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      grading_categories: {
+        Row: {
+          code: string
+          created_at: string
+          establishment_id: string | null
+          id: string
+          is_active: boolean
+          name: string
+          organization_id: string
+          position: number
+          updated_at: string
+          weight: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          establishment_id?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          organization_id: string
+          position?: number
+          updated_at?: string
+          weight?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          establishment_id?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          organization_id?: string
+          position?: number
+          updated_at?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grading_categories_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "grading_categories_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      grading_scales: {
+        Row: {
+          color: string | null
+          created_at: string
+          description: string | null
+          grading_system_id: string
+          id: string
+          is_passing: boolean
+          label: string
+          max_score: number
+          min_score: number
+          organization_id: string
+          position: number
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          grading_system_id: string
+          id?: string
+          is_passing?: boolean
+          label: string
+          max_score: number
+          min_score: number
+          organization_id: string
+          position?: number
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          grading_system_id?: string
+          id?: string
+          is_passing?: boolean
+          label?: string
+          max_score?: number
+          min_score?: number
+          organization_id?: string
+          position?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grading_scales_grading_system_id_organization_id_fkey"
+            columns: ["grading_system_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "grading_systems"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
+      grading_systems: {
+        Row: {
+          allows_averaging: boolean
+          code: string
+          created_at: string
+          decimals: number
+          establishment_id: string | null
+          id: string
+          is_default: boolean
+          max_value: number
+          min_value: number
+          name: string
+          organization_id: string
+          pass_threshold: number | null
+          rounding_mode: Database["public"]["Enums"]["rounding_mode"]
+          status: Database["public"]["Enums"]["grading_system_status"]
+          type: Database["public"]["Enums"]["grading_system_type"]
+          unit: string | null
+          updated_at: string
+          valid_from: string | null
+          valid_until: string | null
+          version: number
+        }
+        Insert: {
+          allows_averaging?: boolean
+          code: string
+          created_at?: string
+          decimals?: number
+          establishment_id?: string | null
+          id?: string
+          is_default?: boolean
+          max_value: number
+          min_value: number
+          name: string
+          organization_id: string
+          pass_threshold?: number | null
+          rounding_mode?: Database["public"]["Enums"]["rounding_mode"]
+          status?: Database["public"]["Enums"]["grading_system_status"]
+          type: Database["public"]["Enums"]["grading_system_type"]
+          unit?: string | null
+          updated_at?: string
+          valid_from?: string | null
+          valid_until?: string | null
+          version?: number
+        }
+        Update: {
+          allows_averaging?: boolean
+          code?: string
+          created_at?: string
+          decimals?: number
+          establishment_id?: string | null
+          id?: string
+          is_default?: boolean
+          max_value?: number
+          min_value?: number
+          name?: string
+          organization_id?: string
+          pass_threshold?: number | null
+          rounding_mode?: Database["public"]["Enums"]["rounding_mode"]
+          status?: Database["public"]["Enums"]["grading_system_status"]
+          type?: Database["public"]["Enums"]["grading_system_type"]
+          unit?: string | null
+          updated_at?: string
+          valid_from?: string | null
+          valid_until?: string | null
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grading_systems_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "grading_systems_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -1227,6 +1821,170 @@ export type Database = {
         }
         Relationships: []
       }
+      report_card_publications: {
+        Row: {
+          id: number
+          organization_id: string
+          published_at: string
+          published_by: string | null
+          reason: string | null
+          report_card_id: string
+          snapshot: Json
+          version: number
+        }
+        Insert: {
+          id?: never
+          organization_id: string
+          published_at?: string
+          published_by?: string | null
+          reason?: string | null
+          report_card_id: string
+          snapshot: Json
+          version: number
+        }
+        Update: {
+          id?: never
+          organization_id?: string
+          published_at?: string
+          published_by?: string | null
+          reason?: string | null
+          report_card_id?: string
+          snapshot?: Json
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "report_card_publications_published_by_fkey"
+            columns: ["published_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "report_card_publications_report_card_id_organization_id_fkey"
+            columns: ["report_card_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "report_cards"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
+      report_cards: {
+        Row: {
+          academic_term_id: string | null
+          academic_year_id: string
+          appreciation: string | null
+          class_id: string
+          created_at: string
+          enrollment_id: string
+          establishment_id: string
+          general_ratio: number | null
+          general_value: number | null
+          generated_at: string
+          generated_by: string | null
+          grading_system_id: string | null
+          id: string
+          organization_id: string
+          rank: number | null
+          rank_of: number | null
+          snapshot: Json
+          status: Database["public"]["Enums"]["report_card_status"]
+          updated_at: string
+        }
+        Insert: {
+          academic_term_id?: string | null
+          academic_year_id: string
+          appreciation?: string | null
+          class_id: string
+          created_at?: string
+          enrollment_id: string
+          establishment_id: string
+          general_ratio?: number | null
+          general_value?: number | null
+          generated_at?: string
+          generated_by?: string | null
+          grading_system_id?: string | null
+          id?: string
+          organization_id: string
+          rank?: number | null
+          rank_of?: number | null
+          snapshot: Json
+          status?: Database["public"]["Enums"]["report_card_status"]
+          updated_at?: string
+        }
+        Update: {
+          academic_term_id?: string | null
+          academic_year_id?: string
+          appreciation?: string | null
+          class_id?: string
+          created_at?: string
+          enrollment_id?: string
+          establishment_id?: string
+          general_ratio?: number | null
+          general_value?: number | null
+          generated_at?: string
+          generated_by?: string | null
+          grading_system_id?: string | null
+          id?: string
+          organization_id?: string
+          rank?: number | null
+          rank_of?: number | null
+          snapshot?: Json
+          status?: Database["public"]["Enums"]["report_card_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "report_cards_academic_term_id_organization_id_fkey"
+            columns: ["academic_term_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "academic_terms"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "report_cards_academic_year_id_establishment_id_fkey"
+            columns: ["academic_year_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id", "establishment_id"]
+          },
+          {
+            foreignKeyName: "report_cards_class_id_academic_year_id_fkey"
+            columns: ["class_id", "academic_year_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id", "academic_year_id"]
+          },
+          {
+            foreignKeyName: "report_cards_enrollment_id_organization_id_fkey"
+            columns: ["enrollment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "report_cards_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "report_cards_generated_by_fkey"
+            columns: ["generated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "report_cards_grading_system_id_organization_id_fkey"
+            columns: ["grading_system_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "grading_systems"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
       role_permissions: {
         Row: {
           permission_key: string
@@ -1503,6 +2261,10 @@ export type Database = {
         Args: { p_class_id: string; p_enrollment_id: string }
         Returns: undefined
       }
+      annuler_note: {
+        Args: { p_raison: string; p_result_id: string }
+        Returns: undefined
+      }
       changer_role_membre: {
         Args: { p_membership_id: string; p_raison?: string; p_role_id: string }
         Returns: undefined
@@ -1520,6 +2282,16 @@ export type Database = {
           p_membership_id: string
           p_raison?: string
           p_statut: Database["public"]["Enums"]["membership_status"]
+        }
+        Returns: undefined
+      }
+      corriger_note: {
+        Args: {
+          p_kind: Database["public"]["Enums"]["grade_kind"]
+          p_raison: string
+          p_raw_value: number
+          p_result_id: string
+          p_scale_id: string
         }
         Returns: undefined
       }
@@ -1577,6 +2349,43 @@ export type Database = {
         }
         Returns: string
       }
+      libelle_tranche: {
+        Args: { p_ratio: number; p_system_id: string }
+        Returns: string
+      }
+      moyenne_generale: {
+        Args: { p_enrollment_id: string; p_term_id?: string }
+        Returns: {
+          bareme_id: string
+          matieres: number
+          mention: string
+          ratio: number
+          valeur: number
+        }[]
+      }
+      moyennes_matiere: {
+        Args: { p_enrollment_id: string; p_term_id?: string }
+        Returns: {
+          bareme_id: string
+          coefficient: number
+          mention: string
+          notes_ignorees: number
+          notes_prises: number
+          ratio: number
+          subject_id: string
+          subject_name: string
+          valeur: number
+        }[]
+      }
+      previsualiser_bulletin: {
+        Args: { p_enrollment_id: string; p_term_id?: string }
+        Returns: Json
+      }
+      publier_bulletin: {
+        Args: { p_raison?: string; p_report_card_id: string }
+        Returns: number
+      }
+      publier_evaluation: { Args: { p_assessment_id: string }; Returns: number }
       reinscrire_apprenant: {
         Args: {
           p_academic_year_id: string
@@ -1596,10 +2405,36 @@ export type Database = {
         Args: { p_raison: string; p_session_id: string }
         Returns: undefined
       }
+      saisir_notes: {
+        Args: { p_assessment_id: string; p_lignes: Json }
+        Returns: number
+      }
       valider_seance: { Args: { p_session_id: string }; Returns: undefined }
+      verifier_bareme: {
+        Args: { p_system_id: string }
+        Returns: {
+          code: string
+          gravite: string
+          message: string
+        }[]
+      }
+      verifier_bulletin: {
+        Args: { p_enrollment_id: string; p_term_id?: string }
+        Returns: string
+      }
+      verifier_evaluation: {
+        Args: { p_assessment_id: string }
+        Returns: number
+      }
     }
     Enums: {
       academic_year_status: "PLANNED" | "ACTIVE" | "CLOSED" | "ARCHIVED"
+      assessment_status:
+        | "DRAFT"
+        | "OPEN"
+        | "VERIFIED"
+        | "PUBLISHED"
+        | "CANCELLED"
       attendance_session_status: "OPEN" | "VALIDATED"
       enrollment_status:
         | "PREREGISTERED"
@@ -1611,14 +2446,34 @@ export type Database = {
         | "DROPPED_OUT"
         | "ARCHIVED"
       establishment_status: "ACTIVE" | "SUSPENDED" | "ARCHIVED"
+      grade_kind:
+        | "SCORE"
+        | "ABSENT"
+        | "EXCUSED"
+        | "EXEMPT"
+        | "NOT_APPLICABLE"
+        | "PENDING"
+      grade_status:
+        | "DRAFT"
+        | "CAPTURED"
+        | "VERIFIED"
+        | "PUBLISHED"
+        | "CORRECTED"
+        | "CANCELLED"
+        | "ARCHIVED"
+      grading_system_status: "DRAFT" | "ACTIVE" | "ARCHIVED"
+      grading_system_type: "NUMERIC" | "LETTER" | "MASTERY" | "CUSTOM"
       invitation_status: "PENDING" | "ACCEPTED" | "REVOKED" | "EXPIRED"
       membership_status: "ACTIVE" | "SUSPENDED"
+      missing_grade_policy: "SKIP" | "ZERO" | "EXCLUDED"
       name_display_format:
         | "GIVEN_FAMILY"
         | "FAMILY_GIVEN"
         | "FAMILY_UPPER_GIVEN"
       organization_status: "TRIAL" | "ACTIVE" | "SUSPENDED" | "CLOSED"
+      report_card_status: "DRAFT" | "VERIFIED" | "PUBLISHED"
       role_scope: "PLATFORM" | "ORGANIZATION" | "ESTABLISHMENT"
+      rounding_mode: "ROUND" | "FLOOR" | "CEIL"
       teacher_status: "ACTIVE" | "INACTIVE"
     }
     CompositeTypes: {
@@ -1727,10 +2582,34 @@ export type Enums<
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
 
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never) = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
 export const Constants = {
   public: {
     Enums: {
       academic_year_status: ["PLANNED", "ACTIVE", "CLOSED", "ARCHIVED"],
+      assessment_status: [
+        "DRAFT",
+        "OPEN",
+        "VERIFIED",
+        "PUBLISHED",
+        "CANCELLED",
+      ],
       attendance_session_status: ["OPEN", "VALIDATED"],
       enrollment_status: [
         "PREREGISTERED",
@@ -1743,15 +2622,37 @@ export const Constants = {
         "ARCHIVED",
       ],
       establishment_status: ["ACTIVE", "SUSPENDED", "ARCHIVED"],
+      grade_kind: [
+        "SCORE",
+        "ABSENT",
+        "EXCUSED",
+        "EXEMPT",
+        "NOT_APPLICABLE",
+        "PENDING",
+      ],
+      grade_status: [
+        "DRAFT",
+        "CAPTURED",
+        "VERIFIED",
+        "PUBLISHED",
+        "CORRECTED",
+        "CANCELLED",
+        "ARCHIVED",
+      ],
+      grading_system_status: ["DRAFT", "ACTIVE", "ARCHIVED"],
+      grading_system_type: ["NUMERIC", "LETTER", "MASTERY", "CUSTOM"],
       invitation_status: ["PENDING", "ACCEPTED", "REVOKED", "EXPIRED"],
       membership_status: ["ACTIVE", "SUSPENDED"],
+      missing_grade_policy: ["SKIP", "ZERO", "EXCLUDED"],
       name_display_format: [
         "GIVEN_FAMILY",
         "FAMILY_GIVEN",
         "FAMILY_UPPER_GIVEN",
       ],
       organization_status: ["TRIAL", "ACTIVE", "SUSPENDED", "CLOSED"],
+      report_card_status: ["DRAFT", "VERIFIED", "PUBLISHED"],
       role_scope: ["PLATFORM", "ORGANIZATION", "ESTABLISHMENT"],
+      rounding_mode: ["ROUND", "FLOOR", "CEIL"],
       teacher_status: ["ACTIVE", "INACTIVE"],
     },
   },

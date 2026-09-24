@@ -63,3 +63,33 @@ export type AttendanceStatus = Tables<'attendance_statuses'>;
 export type AttendanceSession = Tables<'attendance_sessions'>;
 export type AttendanceRecord = Tables<'attendance_records'>;
 export type AttendanceCorrection = Tables<'attendance_corrections'>;
+
+// ---------------------------------------------------------------------------
+// Notation et bulletins (phase 3b)
+// ---------------------------------------------------------------------------
+
+export type GradingSystemType = Enums<'grading_system_type'>;
+export type GradingSystemStatus = Enums<'grading_system_status'>;
+export type RoundingMode = Enums<'rounding_mode'>;
+export type AssessmentStatus = Enums<'assessment_status'>;
+export type MissingGradePolicy = Enums<'missing_grade_policy'>;
+export type ReportCardStatus = Enums<'report_card_status'>;
+
+/**
+ * Ce qu'une note EST, et où elle EN EST — deux axes qu'il ne faut jamais
+ * confondre (@CLAUDE.md, règle 4). Seul `SCORE` porte une valeur : un zéro
+ * réel est `('SCORE', 0)`, une absence `('ABSENT', null)`.
+ */
+export type GradeKind = Enums<'grade_kind'>;
+export type GradeStatus = Enums<'grade_status'>;
+
+export type GradingSystem = Tables<'grading_systems'>;
+export type GradingScale = Tables<'grading_scales'>;
+export type GradingCategory = Tables<'grading_categories'>;
+export type ClassSubject = Tables<'class_subjects'>;
+export type Assessment = Tables<'assessments'>;
+export type AssessmentResult = Tables<'assessment_results'>;
+export type AssessmentResultHistory = Tables<'assessment_result_histories'>;
+export type ReportCard = Tables<'report_cards'>;
+export type ReportCardPublication = Tables<'report_card_publications'>;
+export type EstablishmentSetting = Tables<'establishment_settings'>;

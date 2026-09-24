@@ -249,3 +249,100 @@ export const statutPresenceSchema = z.object({
   exigeJustificatif: z.coerce.boolean(),
 });
 export type SaisieStatutPresence = z.infer<typeof statutPresenceSchema>;
+
+// ---------------------------------------------------------------------------
+// Notation (phase 3b)
+// ---------------------------------------------------------------------------
+
+const nombreDecimal = z.coerce.number().finite('Valeur numérique attendue');
+
+export const baremeSchema = z
+  .object({
+    nom: texteCourt.min(1, 'Nom requis').max(80),
+    code: codeReferentielSchema,
+    type: z.enum(['NUMERIC', 'LETTER', 'MASTERY', 'CUSTOM']),
+    minimum: nombreDecimal,
+    maximum: nombreDecimal,
+    unite: texteCourt.max(20).optional().or(z.literal('')),
+    seuilReussite: z.union([nombreDecimal, z.literal('')]).optional(),
+    arrondi: z.enum(['ROUND', 'FLOOR', 'CEIL']),
+    decimales: z.coerce.number().int().min(0).max(4),
+    moyennable: z.coerce.boolean(),
+  })
+  .refine((v) => v.maximum > v.minimum, {
+    message: 'Le maximum doit dépasser le minimum',
+    path: ['maximum'],
+  })
+  .refine(
+    (v) =>
+      v.seuilReussite === '' ||
+      v.seuilReussite === undefined ||
+      (v.seuilReussite >= v.minimum && v.seuilReussite <= v.maximum),
+    { message: "Le seuil doit tenir dans l'échelle", path: ['seuilReussite'] },
+  );
+export type SaisieBareme = z.infer<typeof baremeSchema>;
+
+export const trancheSchema = z
+  .object({
+    libelle: texteCourt.min(1, 'Libellé requis').max(60),
+    minimum: nombreDecimal,
+    maximum: nombreDecimal,
+    reussite: z.coerce.boolean(),
+  })
+  .refine((v) => v.maximum >= v.minimum, {
+    message: 'Le maximum ne peut pas être inférieur au minimum',
+    path: ['maximum'],
+  });
+export type SaisieTranche = z.infer<typeof trancheSchema>;
+
+export const categorieNotationSchema = z.object({
+  nom: texteCourt.min(1, 'Nom requis').max(60),
+  code: codeReferentielSchema,
+  poids: z.coerce.number().positive('Le poids doit être strictement positif'),
+});
+export type SaisieCategorieNotation = z.infer<typeof categorieNotationSchema>;
+
+export const coefficientMatiereSchema = z.object({
+  matiereId: z.string().uuid('Sélectionnez une matière'),
+  coefficient: z.coerce.number().positive('Le coefficient doit être strictement positif'),
+  baremeId: z.union([z.string().uuid(), z.literal('')]).optional(),
+});
+export type SaisieCoefficientMatiere = z.infer<typeof coefficientMatiereSchema>;
+
+export const evaluationSchema = z.object({
+  classeId: z.string().uuid('Sélectionnez une classe'),
+  matiereId: z.string().uuid('Sélectionnez une matière'),
+  baremeId: z.string().uuid('Sélectionnez un barème'),
+  titre: texteCourt.min(1, 'Titre requis').max(120),
+  date: dateIso,
+  periodeId: z.union([z.string().uuid(), z.literal('')]).optional(),
+  categorieId: z.union([z.string().uuid(), z.literal('')]).optional(),
+  enseignantId: z.union([z.string().uuid(), z.literal('')]).optional(),
+  coefficient: z.coerce.number().positive('Le coefficient doit être strictement positif'),
+  // Jamais de valeur implicite : c'est tout l'objet de la règle 4.
+  politiqueNoteManquante: z.enum(['SKIP', 'ZERO', 'EXCLUDED']),
+});
+export type SaisieEvaluation = z.infer<typeof evaluationSchema>;
+
+export const natureNoteSchema = z.enum([
+  'SCORE',
+  'ABSENT',
+  'EXCUSED',
+  'EXEMPT',
+  'NOT_APPLICABLE',
+  'PENDING',
+]);
+export type NatureNote = z.infer<typeof natureNoteSchema>;
+
+export const correctionNoteSchema = z
+  .object({
+    noteId: z.string().uuid(),
+    nature: natureNoteSchema,
+    valeur: z.union([nombreDecimal, z.literal('')]).optional(),
+    raison: texteCourt.min(1, 'Un motif est obligatoire').max(500),
+  })
+  .refine((v) => v.nature !== 'SCORE' || (v.valeur !== '' && v.valeur !== undefined), {
+    message: 'Une note chiffrée exige une valeur',
+    path: ['valeur'],
+  });
+export type SaisieCorrectionNote = z.infer<typeof correctionNoteSchema>;
