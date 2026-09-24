@@ -107,3 +107,10 @@ export type FeeObligation = Tables<'fee_obligations'>;
 export type Payment = Tables<'payments'>;
 export type PaymentAllocation = Tables<'payment_allocations'>;
 export type Receipt = Tables<'receipts'>;
+
+// ---------------------------------------------------------------------------
+// Fichiers (phase 5)
+// ---------------------------------------------------------------------------
+
+export type FileStatus = Enums<'file_status'>;
+export type FichierStocke = Tables<'files'>;

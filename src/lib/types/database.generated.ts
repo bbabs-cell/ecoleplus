@@ -1358,6 +1358,125 @@ export type Database = {
           },
         ]
       }
+      files: {
+        Row: {
+          attendance_record_id: string | null
+          category_label: string | null
+          checksum: string | null
+          created_at: string
+          delete_reason: string | null
+          deleted_at: string | null
+          deleted_by: string | null
+          enrollment_id: string | null
+          establishment_id: string | null
+          id: string
+          learner_id: string | null
+          mime_type: string
+          organization_id: string
+          original_name: string
+          size_bytes: number
+          status: Database["public"]["Enums"]["file_status"]
+          storage_key: string
+          updated_at: string
+          uploaded_at: string | null
+          uploaded_by: string | null
+        }
+        Insert: {
+          attendance_record_id?: string | null
+          category_label?: string | null
+          checksum?: string | null
+          created_at?: string
+          delete_reason?: string | null
+          deleted_at?: string | null
+          deleted_by?: string | null
+          enrollment_id?: string | null
+          establishment_id?: string | null
+          id?: string
+          learner_id?: string | null
+          mime_type: string
+          organization_id: string
+          original_name: string
+          size_bytes: number
+          status?: Database["public"]["Enums"]["file_status"]
+          storage_key: string
+          updated_at?: string
+          uploaded_at?: string | null
+          uploaded_by?: string | null
+        }
+        Update: {
+          attendance_record_id?: string | null
+          category_label?: string | null
+          checksum?: string | null
+          created_at?: string
+          delete_reason?: string | null
+          deleted_at?: string | null
+          deleted_by?: string | null
+          enrollment_id?: string | null
+          establishment_id?: string | null
+          id?: string
+          learner_id?: string | null
+          mime_type?: string
+          organization_id?: string
+          original_name?: string
+          size_bytes?: number
+          status?: Database["public"]["Enums"]["file_status"]
+          storage_key?: string
+          updated_at?: string
+          uploaded_at?: string | null
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "files_attendance_record_id_organization_id_fkey"
+            columns: ["attendance_record_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "attendance_records"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "files_deleted_by_fkey"
+            columns: ["deleted_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "files_enrollment_id_organization_id_fkey"
+            columns: ["enrollment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "files_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "files_learner_id_organization_id_fkey"
+            columns: ["learner_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "learners"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "files_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "files_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       grading_categories: {
         Row: {
           code: string
@@ -2749,6 +2868,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      confirmer_fichier: {
+        Args: { p_file_id: string; p_size_constatee: number }
+        Returns: Database["public"]["Enums"]["file_status"]
+      }
       corriger_note: {
         Args: {
           p_kind: Database["public"]["Enums"]["grade_kind"]
@@ -2812,6 +2935,14 @@ export type Database = {
         Args: { p_lignes: Json; p_session_id: string }
         Returns: number
       }
+      fichier_telechargeable: {
+        Args: { p_file_id: string }
+        Returns: {
+          cle_stockage: string
+          nom_origine: string
+          type_mime: string
+        }[]
+      }
       inscrire_apprenant: {
         Args: {
           p_academic_year_id: string
@@ -2857,6 +2988,21 @@ export type Database = {
           valeur: number
         }[]
       }
+      preparer_fichier: {
+        Args: {
+          p_category?: string
+          p_enrollment_id?: string
+          p_learner_id?: string
+          p_mime_type: string
+          p_original_name: string
+          p_record_id?: string
+          p_size_bytes: number
+        }
+        Returns: {
+          cle_stockage: string
+          fichier_id: string
+        }[]
+      }
       previsualiser_bulletin: {
         Args: { p_enrollment_id: string; p_term_id?: string }
         Returns: Json
@@ -2899,6 +3045,10 @@ export type Database = {
           regle_minor: number
           solde_minor: number
         }[]
+      }
+      supprimer_fichier: {
+        Args: { p_file_id: string; p_raison: string }
+        Returns: undefined
       }
       valider_seance: { Args: { p_session_id: string }; Returns: undefined }
       verifier_bareme: {
@@ -2945,6 +3095,7 @@ export type Database = {
         | "EXAM"
         | "SUPPLIES"
         | "OTHER"
+      file_status: "PENDING" | "STORED" | "QUARANTINED" | "DELETED"
       grade_kind:
         | "SCORE"
         | "ABSENT"
@@ -3131,6 +3282,7 @@ export const Constants = {
         "SUPPLIES",
         "OTHER",
       ],
+      file_status: ["PENDING", "STORED", "QUARANTINED", "DELETED"],
       grade_kind: [
         "SCORE",
         "ABSENT",

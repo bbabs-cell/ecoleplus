@@ -3,6 +3,9 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { exigerEtablissement } from '@/services/permissions';
+import { fichiersDeLApprenant } from '@/services/fichiers';
+import { stockageConfigure } from '@/lib/r2/client';
+import { CarteDocuments } from '@/components/fichiers/documents';
 import { lireDossier } from '@/services/apprenants';
 import { listerAnnees, listerNiveaux } from '@/services/academique';
 import { listerClasses } from '@/services/classes';
@@ -28,6 +31,10 @@ export default async function PageDossier({ params }: { params: Promise<{ id: st
   const format = contexte.reglages.name_display_format;
   const peutModifier = contexte.permissions.has('learners.manage');
   const peutGerer = contexte.permissions.has('enrollments.manage');
+
+  const documents = contexte.permissions.has('files.read')
+    ? await fichiersDeLApprenant(dossier.apprenant.id)
+    : [];
 
   const annees = await listerAnnees(contexte.etablissementActif.id);
   const niveaux = peutGerer ? await listerNiveaux(contexte.etablissementActif.id, true) : [];
@@ -135,6 +142,21 @@ export default async function PageDossier({ params }: { params: Promise<{ id: st
           annees={annees}
           niveaux={niveaux}
           classesParAnnee={classesParAnnee}
+        />
+      ) : null}
+
+      {contexte.permissions.has('files.read') ? (
+        <CarteDocuments
+          titre="Pièces du dossier"
+          fichiers={documents}
+          chemin={`/apprenants/${dossier.apprenant.id}`}
+          reglages={contexte.reglages}
+          format={contexte.reglages.name_display_format}
+          cible={{ apprenantId: dossier.apprenant.id }}
+          peutDeposer={contexte.permissions.has('files.upload')}
+          peutSupprimer={contexte.permissions.has('files.delete')}
+          stockageActif={stockageConfigure()}
+          categorieSuggeree="Acte de naissance"
         />
       ) : null}
     </div>

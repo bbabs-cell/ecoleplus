@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes, SelectHTMLAttributes, ReactNode } from 'react';
+import type { ComponentPropsWithRef, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 const BASE =
@@ -48,11 +48,13 @@ export function Champ({ label, htmlFor, erreur, aide, obligatoire, children }: H
   );
 }
 
+// `ComponentPropsWithRef` plutôt que `InputHTMLAttributes` : React 19 passe
+// `ref` comme une prop ordinaire, et l'appelant doit pouvoir en poser une.
 export function Saisie({
   className,
   erreur,
   ...reste
-}: InputHTMLAttributes<HTMLInputElement> & { erreur?: boolean }) {
+}: ComponentPropsWithRef<'input'> & { erreur?: boolean }) {
   return (
     <input
       aria-invalid={erreur || undefined}
@@ -66,7 +68,7 @@ export function Liste({
   className,
   erreur,
   ...reste
-}: SelectHTMLAttributes<HTMLSelectElement> & { erreur?: boolean }) {
+}: ComponentPropsWithRef<'select'> & { erreur?: boolean }) {
   return (
     <select
       aria-invalid={erreur || undefined}
