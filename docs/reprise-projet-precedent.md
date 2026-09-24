@@ -36,8 +36,8 @@ Et quelques décisions structurantes, déjà appliquées ou désormais actées :
 | Un établissement indépendant = organisation à un seul établissement | déjà fait |
 | Le rang au bulletin est optionnel et configurable | à appliquer en phase 3 |
 | Une note publiée ne se modifie que par procédure tracée | à appliquer en phase 3 |
-| Un reçu s'annule, ne se supprime pas | à appliquer en phase 4 |
-| Devise de fonctionnement par établissement, sans conversion automatique | à appliquer en phase 4 |
+| Un reçu s'annule, ne se supprime pas | déjà fait (phase 4) |
+| Devise de fonctionnement par établissement, sans conversion automatique | déjà fait (phase 4) |
 
 Une piste retenue pour la phase 5 : l'internationalisation y était faite sans
 bibliothèque, la **clé de traduction étant la chaîne française exacte**, avec
@@ -128,3 +128,30 @@ trois.
 Le manque n° 2 a été comblé sans attendre les parcours : `class_subjects`
 rattache le coefficient à la classe. Quand `programs` arrivera, la table se
 laissera surcharger sans migration destructrice.
+
+## Mise à jour — fin de la phase 4
+
+Le scénario n° 5 est couvert à son tour : quatre scénarios sur douze relevaient
+de phases non construites, il n'en reste qu'un.
+
+| # | Scénario | État |
+|---|---|---|
+| 5 | Annulation de reçu sans permission | couvert (`securite_finances`) |
+| 7 | Téléchargement d'un document non autorisé | phase 5 |
+
+La devise de fonctionnement passe par `establishment_settings`, la table
+clé/valeur posée en phase 3b : le manque n° 7 avait déjà ouvert la voie.
+
+Deux garanties de la phase 4 méritent d'être notées, parce qu'aucune n'est
+vérifiable par une suite `.sql` ordinaire :
+
+- **Unicité du numéro de reçu sous accès concurrent.** Une suite qui
+  s'exécute en une transaction ne peut pas se concurrencer elle-même. Le
+  harnais `supabase/tests/concurrence_recus.sh` ouvre donc N connexions qui
+  encaissent au même instant, sur une base jetable qu'il crée et supprime.
+  Avec une numérotation naïve (`max + 1`), 3 reçus sur 12 seulement
+  aboutissent — les neuf autres tombent sur l'index d'unicité.
+- **Conversion des montants.** `src/lib/argent.ts` est le seul endroit où
+  l'argent change de forme, et `npm test` l'éprouve : conversions exactes,
+  refus d'une saisie plus précise que la devise, et aller-retour sans dérive
+  sur des dizaines de milliers de montants.

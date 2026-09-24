@@ -1130,6 +1130,234 @@ export type Database = {
           },
         ]
       }
+      fee_installments: {
+        Row: {
+          created_at: string
+          due_on: string
+          fee_structure_id: string
+          id: string
+          label: string
+          organization_id: string
+          position: number
+          share_minor: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          due_on: string
+          fee_structure_id: string
+          id?: string
+          label: string
+          organization_id: string
+          position?: number
+          share_minor: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          due_on?: string
+          fee_structure_id?: string
+          id?: string
+          label?: string
+          organization_id?: string
+          position?: number
+          share_minor?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fee_installments_fee_structure_id_organization_id_fkey"
+            columns: ["fee_structure_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "fee_structures"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
+      fee_obligations: {
+        Row: {
+          adjustment_minor: number
+          amount_minor: number
+          cancel_reason: string | null
+          cancelled_at: string | null
+          cancelled_by: string | null
+          created_at: string
+          currency: string
+          discount_minor: number
+          due_on: string
+          enrollment_id: string
+          establishment_id: string
+          fee_structure_id: string
+          id: string
+          installment_id: string | null
+          label: string
+          organization_id: string
+          paid_minor: number
+          status: Database["public"]["Enums"]["obligation_status"] | null
+          total_minor: number | null
+          updated_at: string
+        }
+        Insert: {
+          adjustment_minor?: number
+          amount_minor: number
+          cancel_reason?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
+          created_at?: string
+          currency: string
+          discount_minor?: number
+          due_on: string
+          enrollment_id: string
+          establishment_id: string
+          fee_structure_id: string
+          id?: string
+          installment_id?: string | null
+          label: string
+          organization_id: string
+          paid_minor?: number
+          status?: Database["public"]["Enums"]["obligation_status"] | null
+          total_minor?: number | null
+          updated_at?: string
+        }
+        Update: {
+          adjustment_minor?: number
+          amount_minor?: number
+          cancel_reason?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
+          created_at?: string
+          currency?: string
+          discount_minor?: number
+          due_on?: string
+          enrollment_id?: string
+          establishment_id?: string
+          fee_structure_id?: string
+          id?: string
+          installment_id?: string | null
+          label?: string
+          organization_id?: string
+          paid_minor?: number
+          status?: Database["public"]["Enums"]["obligation_status"] | null
+          total_minor?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fee_obligations_cancelled_by_fkey"
+            columns: ["cancelled_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fee_obligations_enrollment_id_organization_id_fkey"
+            columns: ["enrollment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "fee_obligations_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "fee_obligations_fee_structure_id_organization_id_fkey"
+            columns: ["fee_structure_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "fee_structures"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "fee_obligations_installment_id_organization_id_fkey"
+            columns: ["installment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "fee_installments"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
+      fee_structures: {
+        Row: {
+          academic_year_id: string
+          amount_minor: number
+          code: string
+          created_at: string
+          currency: string
+          establishment_id: string
+          id: string
+          is_active: boolean
+          is_recurring: boolean
+          kind: Database["public"]["Enums"]["fee_kind"]
+          kind_label: string | null
+          level_id: string | null
+          name: string
+          notes: string | null
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          academic_year_id: string
+          amount_minor: number
+          code: string
+          created_at?: string
+          currency: string
+          establishment_id: string
+          id?: string
+          is_active?: boolean
+          is_recurring?: boolean
+          kind?: Database["public"]["Enums"]["fee_kind"]
+          kind_label?: string | null
+          level_id?: string | null
+          name: string
+          notes?: string | null
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          academic_year_id?: string
+          amount_minor?: number
+          code?: string
+          created_at?: string
+          currency?: string
+          establishment_id?: string
+          id?: string
+          is_active?: boolean
+          is_recurring?: boolean
+          kind?: Database["public"]["Enums"]["fee_kind"]
+          kind_label?: string | null
+          level_id?: string | null
+          name?: string
+          notes?: string | null
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fee_structures_academic_year_id_establishment_id_fkey"
+            columns: ["academic_year_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id", "establishment_id"]
+          },
+          {
+            foreignKeyName: "fee_structures_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "fee_structures_level_id_establishment_id_fkey"
+            columns: ["level_id", "establishment_id"]
+            isOneToOne: false
+            referencedRelation: "levels"
+            referencedColumns: ["id", "establishment_id"]
+          },
+        ]
+      }
       grading_categories: {
         Row: {
           code: string
@@ -1767,6 +1995,118 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_allocations: {
+        Row: {
+          amount_minor: number
+          created_at: string
+          id: string
+          obligation_id: string
+          organization_id: string
+          payment_id: string
+        }
+        Insert: {
+          amount_minor: number
+          created_at?: string
+          id?: string
+          obligation_id: string
+          organization_id: string
+          payment_id: string
+        }
+        Update: {
+          amount_minor?: number
+          created_at?: string
+          id?: string
+          obligation_id?: string
+          organization_id?: string
+          payment_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_allocations_obligation_id_organization_id_fkey"
+            columns: ["obligation_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "fee_obligations"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "payment_allocations_payment_id_organization_id_fkey"
+            columns: ["payment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount_minor: number
+          created_at: string
+          currency: string
+          enrollment_id: string
+          establishment_id: string
+          id: string
+          method_label: string
+          notes: string | null
+          organization_id: string
+          paid_on: string
+          received_by: string | null
+          reference: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount_minor: number
+          created_at?: string
+          currency: string
+          enrollment_id: string
+          establishment_id: string
+          id?: string
+          method_label: string
+          notes?: string | null
+          organization_id: string
+          paid_on?: string
+          received_by?: string | null
+          reference?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount_minor?: number
+          created_at?: string
+          currency?: string
+          enrollment_id?: string
+          establishment_id?: string
+          id?: string
+          method_label?: string
+          notes?: string | null
+          organization_id?: string
+          paid_on?: string
+          received_by?: string | null
+          reference?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_enrollment_id_organization_id_fkey"
+            columns: ["enrollment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "payments_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "payments_received_by_fkey"
+            columns: ["received_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       permissions: {
         Row: {
           created_at: string
@@ -1820,6 +2160,109 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      receipt_counters: {
+        Row: {
+          establishment_id: string
+          next_value: number
+          organization_id: string
+          year: number
+        }
+        Insert: {
+          establishment_id: string
+          next_value?: number
+          organization_id: string
+          year: number
+        }
+        Update: {
+          establishment_id?: string
+          next_value?: number
+          organization_id?: string
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "receipt_counters_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
+      receipts: {
+        Row: {
+          created_at: string
+          establishment_id: string
+          id: string
+          issued_at: string
+          issued_by: string | null
+          number: string
+          organization_id: string
+          payment_id: string
+          updated_at: string
+          void_reason: string | null
+          voided_at: string | null
+          voided_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          establishment_id: string
+          id?: string
+          issued_at?: string
+          issued_by?: string | null
+          number: string
+          organization_id: string
+          payment_id: string
+          updated_at?: string
+          void_reason?: string | null
+          voided_at?: string | null
+          voided_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          establishment_id?: string
+          id?: string
+          issued_at?: string
+          issued_by?: string | null
+          number?: string
+          organization_id?: string
+          payment_id?: string
+          updated_at?: string
+          void_reason?: string | null
+          voided_at?: string | null
+          voided_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "receipts_establishment_id_organization_id_fkey"
+            columns: ["establishment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "establishments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "receipts_issued_by_fkey"
+            columns: ["issued_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receipts_payment_id_organization_id_fkey"
+            columns: ["payment_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "receipts_voided_by_fkey"
+            columns: ["voided_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       report_card_publications: {
         Row: {
@@ -2261,8 +2704,29 @@ export type Database = {
         Args: { p_class_id: string; p_enrollment_id: string }
         Returns: undefined
       }
+      affecter_frais: {
+        Args: { p_enrollment_ids: string[]; p_fee_structure_id: string }
+        Returns: number
+      }
+      ajuster_creance: {
+        Args: {
+          p_adjustment_minor: number
+          p_discount_minor: number
+          p_obligation_id: string
+          p_raison: string
+        }
+        Returns: undefined
+      }
+      annuler_creance: {
+        Args: { p_obligation_id: string; p_raison: string }
+        Returns: undefined
+      }
       annuler_note: {
         Args: { p_raison: string; p_result_id: string }
+        Returns: undefined
+      }
+      annuler_recu: {
+        Args: { p_raison: string; p_receipt_id: string }
         Returns: undefined
       }
       changer_role_membre: {
@@ -2327,6 +2791,22 @@ export type Database = {
       definir_etablissements_membre: {
         Args: { p_establishment_ids: string[]; p_membership_id: string }
         Returns: undefined
+      }
+      ecart_echeancier: {
+        Args: { p_fee_structure_id: string }
+        Returns: number
+      }
+      encaisser_paiement: {
+        Args: {
+          p_affectations?: Json
+          p_amount_minor: number
+          p_enrollment_id: string
+          p_method_label: string
+          p_notes?: string
+          p_paid_on?: string
+          p_reference?: string
+        }
+        Returns: string
       }
       enregistrer_appel: {
         Args: { p_lignes: Json; p_session_id: string }
@@ -2409,6 +2889,17 @@ export type Database = {
         Args: { p_assessment_id: string; p_lignes: Json }
         Returns: number
       }
+      situation_financiere: {
+        Args: { p_enrollment_id: string }
+        Returns: {
+          creances: number
+          devise: string
+          du_minor: number
+          en_retard: number
+          regle_minor: number
+          solde_minor: number
+        }[]
+      }
       valider_seance: { Args: { p_session_id: string }; Returns: undefined }
       verifier_bareme: {
         Args: { p_system_id: string }
@@ -2446,6 +2937,14 @@ export type Database = {
         | "DROPPED_OUT"
         | "ARCHIVED"
       establishment_status: "ACTIVE" | "SUSPENDED" | "ARCHIVED"
+      fee_kind:
+        | "REGISTRATION"
+        | "TUITION"
+        | "FILE"
+        | "TRANSPORT"
+        | "EXAM"
+        | "SUPPLIES"
+        | "OTHER"
       grade_kind:
         | "SCORE"
         | "ABSENT"
@@ -2470,6 +2969,7 @@ export type Database = {
         | "GIVEN_FAMILY"
         | "FAMILY_GIVEN"
         | "FAMILY_UPPER_GIVEN"
+      obligation_status: "UNPAID" | "PARTIAL" | "PAID" | "CANCELLED"
       organization_status: "TRIAL" | "ACTIVE" | "SUSPENDED" | "CLOSED"
       report_card_status: "DRAFT" | "VERIFIED" | "PUBLISHED"
       role_scope: "PLATFORM" | "ORGANIZATION" | "ESTABLISHMENT"
@@ -2622,6 +3122,15 @@ export const Constants = {
         "ARCHIVED",
       ],
       establishment_status: ["ACTIVE", "SUSPENDED", "ARCHIVED"],
+      fee_kind: [
+        "REGISTRATION",
+        "TUITION",
+        "FILE",
+        "TRANSPORT",
+        "EXAM",
+        "SUPPLIES",
+        "OTHER",
+      ],
       grade_kind: [
         "SCORE",
         "ABSENT",
@@ -2649,6 +3158,7 @@ export const Constants = {
         "FAMILY_GIVEN",
         "FAMILY_UPPER_GIVEN",
       ],
+      obligation_status: ["UNPAID", "PARTIAL", "PAID", "CANCELLED"],
       organization_status: ["TRIAL", "ACTIVE", "SUSPENDED", "CLOSED"],
       report_card_status: ["DRAFT", "VERIFIED", "PUBLISHED"],
       role_scope: ["PLATFORM", "ORGANIZATION", "ESTABLISHMENT"],

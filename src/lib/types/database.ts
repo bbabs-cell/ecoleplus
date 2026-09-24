@@ -93,3 +93,17 @@ export type AssessmentResultHistory = Tables<'assessment_result_histories'>;
 export type ReportCard = Tables<'report_cards'>;
 export type ReportCardPublication = Tables<'report_card_publications'>;
 export type EstablishmentSetting = Tables<'establishment_settings'>;
+
+// ---------------------------------------------------------------------------
+// Finances (phase 4)
+// ---------------------------------------------------------------------------
+
+export type FeeKind = Enums<'fee_kind'>;
+export type ObligationStatus = Enums<'obligation_status'>;
+
+export type FeeStructure = Tables<'fee_structures'>;
+export type FeeInstallment = Tables<'fee_installments'>;
+export type FeeObligation = Tables<'fee_obligations'>;
+export type Payment = Tables<'payments'>;
+export type PaymentAllocation = Tables<'payment_allocations'>;
+export type Receipt = Tables<'receipts'>;

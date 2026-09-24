@@ -17,6 +17,7 @@ import {
   ScrollText,
   Settings,
   Users,
+  Wallet,
   UsersRound,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -42,6 +43,7 @@ const ICONES = {
   evaluations: ClipboardList,
   bulletins: FileText,
   baremes: Scale,
+  finances: Wallet,
   membres: Users,
   organisation: Settings,
   journal: ScrollText,

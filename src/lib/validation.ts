@@ -346,3 +346,50 @@ export const correctionNoteSchema = z
     path: ['valeur'],
   });
 export type SaisieCorrectionNote = z.infer<typeof correctionNoteSchema>;
+
+// ---------------------------------------------------------------------------
+// Finances (phase 4)
+// ---------------------------------------------------------------------------
+// Les montants restent du TEXTE ici : leur conversion en unité mineure entière
+// se fait dans `@/lib/argent`, sur les chiffres, jamais par un flottant.
+
+const montantSaisi = texteCourt
+  .min(1, 'Montant requis')
+  .regex(/^-?[\d\s  ]*([.,]\d*)?$/, 'Montant invalide');
+
+export const deviseSchema = texteCourt.regex(/^[A-Z]{3}$/, 'Code de devise invalide (ex. « EUR »)');
+
+export const fraisSchema = z.object({
+  nom: texteCourt.min(1, 'Nom requis').max(120),
+  code: codeReferentielSchema,
+  type: z.enum(['REGISTRATION', 'TUITION', 'FILE', 'TRANSPORT', 'EXAM', 'SUPPLIES', 'OTHER']),
+  typeLibelle: texteCourt.max(60).optional().or(z.literal('')),
+  montant: montantSaisi,
+  niveauId: z.union([z.string().uuid(), z.literal('')]).optional(),
+  recurrent: z.coerce.boolean(),
+});
+export type SaisieFrais = z.infer<typeof fraisSchema>;
+
+export const echeanceSchema = z.object({
+  libelle: texteCourt.min(1, 'Libellé requis').max(80),
+  date: dateIso,
+  montant: montantSaisi,
+});
+export type SaisieEcheance = z.infer<typeof echeanceSchema>;
+
+export const paiementSchema = z.object({
+  montant: montantSaisi,
+  methode: texteCourt.min(1, 'Précisez le moyen de paiement').max(60),
+  reference: texteCourt.max(80).optional().or(z.literal('')),
+  date: dateIso,
+  notes: texteCourt.max(500).optional().or(z.literal('')),
+});
+export type SaisiePaiement = z.infer<typeof paiementSchema>;
+
+export const ajustementSchema = z.object({
+  creanceId: z.string().uuid(),
+  remise: montantSaisi.or(z.literal('')),
+  ajustement: montantSaisi.or(z.literal('')),
+  raison: texteCourt.min(1, 'Un motif est obligatoire').max(500),
+});
+export type SaisieAjustement = z.infer<typeof ajustementSchema>;
