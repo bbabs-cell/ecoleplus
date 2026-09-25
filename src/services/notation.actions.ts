@@ -477,10 +477,13 @@ export async function annulerNoteAction(
 }
 
 /**
- * Désigne le barème par défaut de l'établissement.
+ * Désigne le barème par défaut.
  *
- * Rien n'est désigné d'office à la création d'une organisation : ce serait
- * choisir une norme. C'est l'établissement qui tranche, ici.
+ * Le défaut se pose DANS LA PORTÉE du barème, jamais en déplaçant celui-ci :
+ * un barème d'organisation reste partagé, un barème d'établissement reste
+ * propre à son établissement. L'audit de sécurité avait montré qu'autoriser le
+ * déplacement laissait un établissement s'approprier le référentiel commun —
+ * la base le refuse désormais, et cette action ne le tente plus.
  */
 export async function definirBaremeParDefautAction(
   _precedent: EtatFormulaire,
@@ -493,21 +496,42 @@ export async function definirBaremeParDefautAction(
 
   const supabase = await clientServeur();
 
-  // L'index d'unicité n'autorise qu'un défaut par périmètre : on libère la
-  // place avant de la prendre.
-  const { error: erreurLiberation } = await supabase
+  const { data: bareme, error: erreurLecture } = await supabase
     .from('grading_systems')
-    .update({ is_default: false })
-    .eq('establishment_id', contexte.etablissementActif.id)
-    .eq('is_default', true);
+    .select('id, name, establishment_id')
+    .eq('id', baremeId)
+    .maybeSingle();
+
+  if (erreurLecture) return { statut: 'erreur', message: messageErreur(erreurLecture) };
+  if (!bareme) return { statut: 'erreur', message: 'Barème introuvable.' };
+
+  const porteeOrganisation = bareme.establishment_id === null;
+
+  if (!porteeOrganisation && bareme.establishment_id !== contexte.etablissementActif.id) {
+    return {
+      statut: 'erreur',
+      message: "Ce barème appartient à un autre établissement.",
+    };
+  }
+
+  // L'index d'unicité n'autorise qu'un défaut par portée : on libère la place
+  // avant de la prendre. La RLS refusera l'écriture au niveau organisation
+  // pour un rôle de portée établissement.
+  const liberation = supabase.from('grading_systems').update({ is_default: false });
+  const { error: erreurLiberation } = await (porteeOrganisation
+    ? liberation.is('establishment_id', null).eq('is_default', true)
+    : liberation
+        .eq('establishment_id', contexte.etablissementActif.id)
+        .eq('is_default', true));
 
   if (erreurLiberation) {
     return { statut: 'erreur', message: messageErreur(erreurLiberation) };
   }
 
+  // `establishment_id` n'est PAS touché : seule la valeur par défaut change.
   const { error } = await supabase
     .from('grading_systems')
-    .update({ is_default: true, establishment_id: contexte.etablissementActif.id })
+    .update({ is_default: true })
     .eq('id', baremeId);
 
   if (error) return { statut: 'erreur', message: messageErreur(error) };
@@ -515,7 +539,9 @@ export async function definirBaremeParDefautAction(
   revalidatePath('/baremes');
   return {
     statut: 'succes',
-    message: "Barème par défaut de l'établissement défini.",
+    message: porteeOrganisation
+      ? `« ${bareme.name} » devient le barème par défaut de l'organisation.`
+      : `« ${bareme.name} » devient le barème par défaut de l'établissement.`,
   };
 }
 

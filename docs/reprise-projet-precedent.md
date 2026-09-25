@@ -182,3 +182,70 @@ qu'on l'a réimplémentée juste.
 Reste en suspens, hors des scénarios : le dépôt réel dans R2 n'a pas été
 éprouvé de bout en bout, faute d'identification Cloudflare dans
 l'environnement de développement. L'interface le dit plutôt que de le taire.
+
+## Audit de sécurité — après la phase 5
+
+Un audit des zones touchées par les phases 3 à 5 a trouvé **trois failles, toutes
+reproduites avant d'être corrigées** (migration `0033_corrections_audit.sql`).
+Aucune ne franchissait la frontière d'une organisation ; deux franchissaient
+celle d'un établissement, la troisième aurait mis un module hors service.
+
+### 1. Une fonction qui écrit se déclarait `STABLE`
+
+`public.fichier_telechargeable` journalisait chaque téléchargement en appelant
+`write_audit_log`, tout en étant déclarée `STABLE`. PostgreSQL tolère cet appel
+indirect dans une transaction ordinaire — c'est pourquoi `supabase/tests` passait,
+`psql` ouvrant des transactions en lecture-écriture. Mais **PostgREST exécute
+toute fonction `STABLE` ou `IMMUTABLE` dans une transaction `READ ONLY`** :
+
+```
+ERROR:  cannot execute INSERT in a read-only transaction
+```
+
+En production, aucun téléchargement n'aurait abouti — et comme la route traduit
+toute erreur en 404 pour ne pas révéler l'existence d'un fichier, la panne se
+serait présentée comme une absence.
+
+C'est le type de défaut qu'un test ne voit pas s'il s'exécute dans un contexte
+plus permissif que la production. L'assertion ajoutée ne teste donc pas un cas
+mais l'invariant : **aucune fonction de `public` appelant `write_audit_log` n'est
+`STABLE`**.
+
+### 2. et 3. `can_access_establishment(null)` vaut `true` — à juste titre en lecture
+
+Trois tables portent un `establishment_id` nullable : `grading_systems`,
+`grading_categories`, `attendance_statuses`. Nul y signifie « commun à toute
+l'organisation ». Leur policy d'écriture évaluait `can_write(…, establishment_id)`,
+qui accepte une portée nulle — correct pour **lire** un référentiel partagé, pas
+pour en **écrire** un.
+
+Deux portes s'ouvraient, l'une et l'autre reproduites depuis un compte
+`ESTABLISHMENT_ADMIN` d'une annexe :
+
+- **Appropriation.** `using` porte sur la ligne avant modification, `with check`
+  sur celle d'après. Un `update … set establishment_id = <son annexe>` passait
+  donc les deux clauses : le barème commun devenait le sien, et disparaissait de
+  la liste des autres établissements.
+- **Imposition.** Un `insert` avec `establishment_id = null` créait un
+  référentiel s'appliquant à des établissements auxquels il n'a aucun accès.
+
+Deux barrières les ferment. Écrire une ligne de portée organisation exige
+désormais un rôle dont la portée n'est pas l'établissement ; et un déclencheur
+refuse tout déplacement de portée, **pour tout le monde, y compris le
+propriétaire** : un référentiel d'établissement se crée, il ne se prend pas.
+
+Les trois corrections sont couvertes par des assertions dont l'échec a été
+vérifié en retirant la migration (`securite_notation`, `securite_presences`,
+`securite_fichiers`).
+
+### Ce que l'audit n'a pas trouvé
+
+Aucune fuite entre organisations, aucun secret côté client ou dans un message
+d'erreur, aucun accès R2 sans URL signée, aucune Server Action sans garde
+serveur. Les deux tables signalées `rls_enabled_no_policy` par Supabase
+(`receipt_counters`, `session_revocations`) sont fermées deux fois : RLS active
+sans policy, et aucun privilège accordé à `anon` ni `authenticated`.
+
+Reste un réglage hors code : **la protection contre les mots de passe compromis
+(HaveIBeenPwned) est désactivée** dans Supabase Auth. Elle s'active au tableau
+de bord.

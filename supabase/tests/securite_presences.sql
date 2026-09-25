@@ -484,6 +484,78 @@ end $$;
 
 \o
 \echo ''
+\echo 'Portee des statuts de presence (audit de securite)'
+\o /dev/null
+
+-- Les statuts de presence sont des donnees partagees (@docs/business-rules/presences.md).
+-- Un etablissement s'en sert ; il ne les redefinit pas pour les autres.
+insert into auth.users (email, raw_user_meta_data)
+values ('erika@alpha.test', '{"given_name":"Erika","family_name":"Ba"}');
+insert into t select 'erika', id from auth.users where email='erika@alpha.test';
+
+insert into public.establishments (organization_id, name, code)
+values ((select val from t where cle='org'), 'Annexe Nord', 'ANX');
+insert into t select 'anx', id from public.establishments where code='ANX';
+
+insert into public.organization_memberships (profile_id, organization_id, role_id)
+select (select val from t where cle='erika'), (select val from t where cle='org'), id
+  from public.roles where organization_id is null and code = 'ESTABLISHMENT_ADMIN';
+
+insert into public.establishment_users (membership_id, establishment_id)
+select m.id, (select val from t where cle='anx')
+  from public.organization_memberships m
+ where m.profile_id = (select val from t where cle='erika');
+
+do $$
+declare v_erreur text; v_id uuid; v_etab uuid; v_n integer;
+begin
+  execute 'set local role authenticated';
+  perform set_config('request.jwt.claims', pg_temp.claims_de((select val from t where cle='erika')), true);
+
+  perform pg_temp.verifier(ecoleplus.has_permission('attendance.configure'),
+    'L''administratrice d''annexe a bien attendance.configure');
+
+  -- Creer un statut valable pour toute l'organisation : refuse.
+  begin
+    insert into public.attendance_statuses
+      (organization_id, establishment_id, name, code, is_present, counts_absent)
+    values ((select val from t where cle='org'), null, 'Statut impose', 'IMPOSE', true, false);
+    v_erreur := 'aucune';
+  exception when others then v_erreur := sqlerrm; end;
+  perform pg_temp.verifier(v_erreur like '%row-level security%',
+    'Un etablissement n''impose pas un statut de presence a toute l''organisation');
+
+  -- Son propre statut, en revanche, lui appartient.
+  insert into public.attendance_statuses
+    (organization_id, establishment_id, name, code, is_present, counts_absent)
+  values ((select val from t where cle='org'), (select val from t where cle='anx'),
+          'Sortie anticipee', 'SORTIE', true, false)
+  returning id into v_id;
+  perform pg_temp.verifier(v_id is not null,
+    'Mais elle cree librement celui de son etablissement');
+
+  -- Et un statut commun ne se detourne pas vers elle : la RLS ne lui donne
+  -- aucune prise en ecriture dessus.
+  begin
+    update public.attendance_statuses set establishment_id = (select val from t where cle='anx')
+     where organization_id = (select val from t where cle='org')
+       and establishment_id is null and code = 'ABSENT';
+    get diagnostics v_n = row_count;
+    v_erreur := 'aucune';
+  exception when others then v_erreur := sqlerrm; v_n := -1; end;
+  perform pg_temp.verifier(v_n = 0,
+    'Le statut commun ne se tire pas vers un etablissement');
+
+  select establishment_id into v_etab from public.attendance_statuses
+   where organization_id = (select val from t where cle='org') and code = 'ABSENT';
+  perform pg_temp.verifier(v_etab is null,
+    'Et il reste commun a tous');
+
+  execute 'reset role';
+end $$;
+
+\o
+\echo ''
 \echo 'Tous les tests de presences sont passes.'
 
 rollback;

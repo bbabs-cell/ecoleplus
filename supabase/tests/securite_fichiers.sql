@@ -420,6 +420,41 @@ begin
 end $$;
 
 \o
+\echo ''
+\echo 'Une fonction qui ecrit ne se declare pas STABLE (audit de securite)'
+\o /dev/null
+
+-- PostgREST execute les fonctions STABLE et IMMUTABLE dans une transaction
+-- READ ONLY. Une fonction qui journalise — donc qui ecrit — et se declare
+-- STABLE passe sous psql et echoue en production, la ou la route traduit
+-- l'erreur en « document introuvable » : une panne deguisee en absence.
+-- L'invariant se verifie ici, une fois pour toutes les fonctions exposees.
+do $$
+declare v_coupables text;
+begin
+  select string_agg(p.proname || '()', ', ' order by p.proname) into v_coupables
+    from pg_proc p
+    join pg_namespace n on n.oid = p.pronamespace
+   where n.nspname = 'public'
+     and p.provolatile <> 'v'
+     and p.prosrc like '%write_audit_log%';
+
+  perform pg_temp.verifier(v_coupables is null,
+    coalesce('Fonctions ecrivantes declarees STABLE : ' || v_coupables,
+             'Aucune fonction journalisante n''est declaree STABLE ou IMMUTABLE'));
+end $$;
+
+do $$
+declare v_volatilite char;
+begin
+  select provolatile into v_volatilite
+    from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+   where n.nspname = 'public' and p.proname = 'fichier_telechargeable';
+  perform pg_temp.verifier(v_volatilite = 'v',
+    'fichier_telechargeable est VOLATILE : elle journalise le telechargement');
+end $$;
+
+\o
 rollback;
 \echo ''
 \echo 'Suite terminee.'

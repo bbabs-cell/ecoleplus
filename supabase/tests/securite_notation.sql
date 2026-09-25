@@ -874,6 +874,138 @@ begin
 end $$;
 
 \o
+\echo ''
+\echo '13. La portee d''un referentiel ne se detourne pas (audit de securite)'
+\o /dev/null
+
+-- Erika administre l'annexe, et rien d'autre. Le barreme NUM20 appartient a
+-- l'organisation : il est lisible par tous les etablissements, donc modifiable
+-- par personne depuis un seul d'entre eux.
+insert into auth.users (email, raw_user_meta_data)
+values ('erika@alpha.test', '{"given_name":"Erika","family_name":"Ba"}');
+insert into t select 'erika', id from auth.users where email='erika@alpha.test';
+
+insert into public.establishments (organization_id, name, code)
+values ((select val from t where cle='org'), 'Annexe Nord', 'ANX');
+insert into t select 'anx', id from public.establishments where code='ANX';
+
+insert into public.organization_memberships (profile_id, organization_id, role_id)
+select (select val from t where cle='erika'), (select val from t where cle='org'), id
+  from public.roles where organization_id is null and code = 'ESTABLISHMENT_ADMIN';
+
+insert into public.establishment_users (membership_id, establishment_id)
+select m.id, (select val from t where cle='anx')
+  from public.organization_memberships m
+ where m.profile_id = (select val from t where cle='erika');
+
+do $$
+declare v_erreur text; v_etab uuid; v_defaut boolean; v_n integer;
+begin
+  execute 'set local role authenticated';
+  perform set_config('request.jwt.claims', pg_temp.claims_de((select val from t where cle='erika')), true);
+
+  -- Elle a bien grades.configure : ce qui suit ne tient pas a une permission
+  -- manquante mais a la portee.
+  perform pg_temp.verifier(ecoleplus.has_permission('grades.configure'),
+    'L''administratrice d''annexe a bien grades.configure');
+
+  -- (1) Creer un referentiel d'organisation depuis un etablissement : refuse.
+  begin
+    insert into public.grading_systems
+      (organization_id, establishment_id, name, code, type, min_value, max_value)
+    values ((select val from t where cle='org'), null, 'Impose a tous', 'IMPOSE', 'NUMERIC', 0, 10);
+    v_erreur := 'aucune';
+  exception when others then v_erreur := sqlerrm; end;
+  perform pg_temp.verifier(v_erreur like '%row-level security%',
+    'Un etablissement n''impose pas un bareme a toute l''organisation');
+
+  -- (2) Meme refus pour une categorie d'evaluation.
+  begin
+    insert into public.grading_categories
+      (organization_id, establishment_id, name, code, weight)
+    values ((select val from t where cle='org'), null, 'Imposee', 'IMPOSEE', 1);
+    v_erreur := 'aucune';
+  exception when others then v_erreur := sqlerrm; end;
+  perform pg_temp.verifier(v_erreur like '%row-level security%',
+    'Ni une categorie d''evaluation');
+
+  -- (3) S'approprier le bareme commun en le tirant vers son etablissement.
+  --     La RLS ne lui donne aucune prise en ecriture sur une ligne commune :
+  --     l'ordre ne leve rien, il ne touche simplement rien.
+  begin
+    update public.grading_systems
+       set is_default = true, establishment_id = (select val from t where cle='anx')
+     where id = (select val from t where cle='num20');
+    get diagnostics v_n = row_count;
+    v_erreur := 'aucune';
+  exception when others then v_erreur := sqlerrm; v_n := -1; end;
+  perform pg_temp.verifier(v_n = 0,
+    'Le bareme commun ne se tire pas vers un etablissement');
+
+  select establishment_id, is_default into v_etab, v_defaut
+    from public.grading_systems where id = (select val from t where cle='num20');
+  perform pg_temp.verifier(v_etab is null and v_defaut is not true,
+    'Et il est reste ou il etait, partage et sans defaut impose');
+
+  -- (4) Ce qui lui revient, en revanche, lui reste accessible : un bareme
+  --     propre a son annexe se cree sans entrave.
+  insert into public.grading_systems
+    (organization_id, establishment_id, name, code, type, min_value, max_value)
+  values ((select val from t where cle='org'), (select val from t where cle='anx'),
+          'Annexe sur 10', 'ANX10', 'NUMERIC', 0, 10);
+  select count(*) into v_n from public.grading_systems
+   where code = 'ANX10' and establishment_id = (select val from t where cle='anx');
+  perform pg_temp.verifier(v_n = 1,
+    'Mais elle configure librement le bareme de son propre etablissement');
+
+  -- (5) Et elle ne le fait pas glisser vers l'organisation non plus.
+  begin
+    update public.grading_systems set establishment_id = null where code = 'ANX10';
+    get diagnostics v_n = row_count;
+    v_erreur := 'aucune';
+  exception when others then v_erreur := sqlerrm; v_n := -1; end;
+  perform pg_temp.verifier(v_erreur <> 'aucune' or v_n = 0,
+    'Le glissement inverse est ferme lui aussi');
+
+  select establishment_id into v_etab from public.grading_systems where code = 'ANX10';
+  perform pg_temp.verifier(v_etab = (select val from t where cle='anx'),
+    'Le bareme d''annexe reste celui de l''annexe');
+
+  execute 'reset role';
+end $$;
+
+do $$
+declare v_n integer; v_erreur text;
+begin
+  execute 'set local role authenticated';
+  perform set_config('request.jwt.claims', pg_temp.claims_de((select val from t where cle='alice')), true);
+
+  -- Contre-epreuve : la proprietaire, de portee organisation, garde la main
+  -- sur le referentiel commun. La correction ne bloque pas tout le monde.
+  insert into public.grading_systems
+    (organization_id, establishment_id, name, code, type, min_value, max_value)
+  values ((select val from t where cle='org'), null, 'Commun sur 5', 'COM5', 'NUMERIC', 0, 5);
+  select count(*) into v_n from public.grading_systems
+   where code = 'COM5' and establishment_id is null;
+  perform pg_temp.verifier(v_n = 1,
+    'La portee organisation cree toujours un bareme commun');
+
+  -- Elle a pourtant les deux portees en ecriture : ce qui l'arrete ici n'est
+  -- plus la RLS mais le declencheur. Deplacer la portee d'un referentiel
+  -- deja en service n'est une operation legitime pour personne.
+  begin
+    update public.grading_systems
+       set establishment_id = (select val from t where cle='anx')
+     where id = (select val from t where cle='num20');
+    v_erreur := 'aucune';
+  exception when others then v_erreur := sqlerrm; end;
+  perform pg_temp.verifier(v_erreur like '%ECOLEPLUS_PORTEE_FIGEE%',
+    'Mais meme la proprietaire ne deplace pas la portee : elle en cree un autre');
+
+  execute 'reset role';
+end $$;
+
+\o
 rollback;
 \echo ''
 \echo 'Suite terminee.'
