@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, Ban } from 'lucide-react';
+import { Ban } from 'lucide-react';
 import { brand } from '@/config/brand';
 import { exigerEtablissement } from '@/services/permissions';
 import { affectationsDuRecu, recu } from '@/services/finances';
@@ -10,6 +9,7 @@ import { formaterDate, formaterDateHeure, nomAffiche } from '@/lib/format';
 import { Carte, CorpsCarte } from '@/components/ui/carte';
 import { Alerte } from '@/components/ui/alerte';
 import { AnnulerRecu, ImprimerRecu } from './recu-client';
+import { LienRetour } from '@/components/ui/lien-retour';
 
 export const metadata: Metadata = { title: 'Reçu' };
 
@@ -31,15 +31,11 @@ export default async function PageRecu({ params }: { params: Promise<{ id: strin
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3 print:hidden">
-        <Link
-          href={
-            paiement?.inscription ? `/finances/${paiement.inscription.id}` : '/finances'
-          }
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-encre-douce hover:text-encre"
+        <LienRetour
+          href={paiement?.inscription ? `/finances/${paiement.inscription.id}` : '/finances'}
         >
-          <ArrowLeft className="size-4" aria-hidden="true" />
           Dossier financier
-        </Link>
+        </LienRetour>
         <ImprimerRecu />
       </div>
 

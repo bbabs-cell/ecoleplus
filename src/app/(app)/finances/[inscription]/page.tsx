@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, TriangleAlert } from 'lucide-react';
+import { TriangleAlert } from 'lucide-react';
 import { exigerEtablissement } from '@/services/permissions';
 import { clientServeur } from '@/lib/supabase/server';
 import {
@@ -16,6 +16,7 @@ import { Carte, CorpsCarte, EnTeteCarte, SousTitreCarte, TitreCarte } from '@/co
 import { Alerte } from '@/components/ui/alerte';
 import { Etiquette } from '@/components/ui/etiquette';
 import { AjusterCreance, Caisse, LienRecu } from './caisse';
+import { LienRetour } from '@/components/ui/lien-retour';
 
 export const metadata: Metadata = { title: 'Dossier financier' };
 
@@ -76,13 +77,7 @@ export default async function PageDossierFinancier({
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <Link
-          href="/finances"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-encre-douce hover:text-encre"
-        >
-          <ArrowLeft className="size-4" aria-hidden="true" />
-          Finances
-        </Link>
+        <LienRetour href="/finances">Finances</LienRetour>
       </div>
 
       <header className="space-y-1">

@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import { exigerEtablissement } from '@/services/permissions';
 import { anomaliesDuBareme, feuilleDeNotes } from '@/services/notation';
 import { formaterDate, nomAffiche } from '@/lib/format';
 import { Alerte } from '@/components/ui/alerte';
 import { Etiquette } from '@/components/ui/etiquette';
 import { ActionsEvaluation, CorrectionNote, FeuilleDeNotes } from './feuille';
+import { LienRetour } from '@/components/ui/lien-retour';
 
 export const metadata: Metadata = { title: 'Saisie des notes' };
 
@@ -42,13 +42,7 @@ export default async function PageEvaluation({ params }: { params: Promise<{ id:
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <Link
-          href="/evaluations"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-encre-douce hover:text-encre"
-        >
-          <ArrowLeft className="size-4" aria-hidden="true" />
-          Évaluations
-        </Link>
+        <LienRetour href="/evaluations">Évaluations</LienRetour>
       </div>
 
       <header className="flex flex-wrap items-start justify-between gap-3">

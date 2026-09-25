@@ -1,7 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
 import { exigerEtablissement } from '@/services/permissions';
 import { fichiersDeLApprenant } from '@/services/fichiers';
 import { stockageConfigure } from '@/lib/r2/client';
@@ -15,6 +13,7 @@ import { Carte, EnTeteCarte, SousTitreCarte, TitreCarte } from '@/components/ui/
 import { Etiquette } from '@/components/ui/etiquette';
 import { StatutInscription } from '@/components/academique/statut-inscription';
 import { ActionsInscription, FicheApprenant, FormulaireReinscription } from './formulaires';
+import { LienRetour } from '@/components/ui/lien-retour';
 
 export const metadata: Metadata = { title: 'Dossier apprenant' };
 
@@ -56,13 +55,7 @@ export default async function PageDossier({ params }: { params: Promise<{ id: st
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <Link
-        href="/apprenants"
-        className="inline-flex items-center gap-1.5 text-sm text-encre-douce transition-colors hover:text-encre"
-      >
-        <ArrowLeft className="size-4" aria-hidden="true" />
-        Retour aux apprenants
-      </Link>
+      <LienRetour href="/apprenants">Retour aux apprenants</LienRetour>
 
       <header className="flex flex-wrap items-center gap-4">
         <span

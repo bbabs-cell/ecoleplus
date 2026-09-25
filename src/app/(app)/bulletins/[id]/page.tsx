@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, History, Lock } from 'lucide-react';
+import { History, Lock } from 'lucide-react';
 import { exigerEtablissement } from '@/services/permissions';
 import { bulletin, lireInstantane, versionsPubliees } from '@/services/bulletins';
 import { formaterDateHeure, nomAffiche } from '@/lib/format';
@@ -9,6 +8,7 @@ import { Alerte } from '@/components/ui/alerte';
 import { Etiquette } from '@/components/ui/etiquette';
 import { Carte, CorpsCarte, EnTeteCarte, SousTitreCarte, TitreCarte } from '@/components/ui/carte';
 import { PublierBulletin } from '../actions-client';
+import { LienRetour } from '@/components/ui/lien-retour';
 
 export const metadata: Metadata = { title: 'Bulletin' };
 
@@ -30,13 +30,7 @@ export default async function PageBulletin({ params }: { params: Promise<{ id: s
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <Link
-          href="/bulletins"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-encre-douce hover:text-encre"
-        >
-          <ArrowLeft className="size-4" aria-hidden="true" />
-          Bulletins
-        </Link>
+        <LienRetour href="/bulletins">Bulletins</LienRetour>
       </div>
 
       <header className="flex flex-wrap items-start justify-between gap-3">

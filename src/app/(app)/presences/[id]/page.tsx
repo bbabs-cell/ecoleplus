@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import { exigerEtablissement } from '@/services/permissions';
 import { feuilleDAppel, statutsUtilisables } from '@/services/presences';
 import { formaterDate, formaterHeure, nomAffiche } from '@/lib/format';
 import { Alerte } from '@/components/ui/alerte';
 import { Etiquette } from '@/components/ui/etiquette';
 import { ActionsSeance, CorrectionPresence, FeuilleDAppel } from './feuille';
+import { LienRetour } from '@/components/ui/lien-retour';
 
 export const metadata: Metadata = { title: "Feuille d'appel" };
 
@@ -35,13 +35,7 @@ export default async function PageSeance({ params }: { params: Promise<{ id: str
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <Link
-          href="/presences"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-encre-douce hover:text-encre"
-        >
-          <ArrowLeft className="size-4" aria-hidden="true" />
-          Séances
-        </Link>
+        <LienRetour href="/presences">Séances</LienRetour>
       </div>
 
       <header className="flex flex-wrap items-start justify-between gap-3">
