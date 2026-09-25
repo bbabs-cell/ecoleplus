@@ -81,14 +81,35 @@ export const connexionSchema = z.object({
   motDePasse: z.string().min(1, 'Mot de passe requis'),
 });
 
+// Seuil volontairement placé sur la longueur, pas sur une composition
+// imposée : les règles de caractères poussent aux mots de passe prévisibles.
+export const motDePasseSchema = z
+  .string()
+  .min(12, 'Le mot de passe doit comporter au moins 12 caractères')
+  .max(200);
+
 export const inscriptionSchema = z.object({
   prenom: texteCourt.min(1, 'Prénom requis').max(80),
   nom: texteCourt.min(1, 'Nom requis').max(80),
   email: emailSchema,
-  // Seuil volontairement placé sur la longueur, pas sur une composition
-  // imposée : les règles de caractères poussent aux mots de passe prévisibles.
-  motDePasse: z.string().min(12, 'Le mot de passe doit comporter au moins 12 caractères').max(200),
+  motDePasse: motDePasseSchema,
 });
+
+export const motDePasseOublieSchema = z.object({
+  email: emailSchema,
+});
+
+export const nouveauMotDePasseSchema = z
+  .object({
+    motDePasse: motDePasseSchema,
+    confirmation: z.string(),
+  })
+  // La confirmation se vérifie ici comme ailleurs : côté serveur aussi, jamais
+  // seulement dans le navigateur (règles de code, 2).
+  .refine((valeurs) => valeurs.motDePasse === valeurs.confirmation, {
+    message: 'Les deux saisies diffèrent',
+    path: ['confirmation'],
+  });
 
 // ---------------------------------------------------------------------------
 // Domaine académique (phase 2)

@@ -3,7 +3,7 @@
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import Link from 'next/link';
-import { connexionAction } from '@/services/auth.actions';
+import { demanderReinitialisationAction } from '@/services/auth.actions';
 import { ETAT_INITIAL } from '@/services/formulaire';
 import { Bouton } from '@/components/ui/bouton';
 import { Champ, Saisie } from '@/components/ui/champ';
@@ -13,19 +13,32 @@ function BoutonEnvoi() {
   const { pending } = useFormStatus();
   return (
     <Bouton type="submit" className="w-full" disabled={pending}>
-      {pending ? 'Connexion…' : 'Se connecter'}
+      {pending ? 'Envoi…' : 'Envoyer le lien'}
     </Bouton>
   );
 }
 
-export function FormulaireConnexion({ suite }: { suite: string }) {
-  const [etat, action] = useActionState(connexionAction, ETAT_INITIAL);
+export function FormulaireMotDePasseOublie() {
+  const [etat, action] = useActionState(demanderReinitialisationAction, ETAT_INITIAL);
   const champs = etat.statut === 'erreur' ? (etat.champs ?? {}) : {};
+
+  // Une fois la demande partie, le formulaire s'efface : le réafficher
+  // inviterait à réessayer, alors que la réponse serait identique.
+  if (etat.statut === 'succes') {
+    return (
+      <div className="space-y-4">
+        <Alerte ton="succes">{etat.message}</Alerte>
+        <p className="text-center text-sm text-encre-douce">
+          <Link href="/connexion" className="font-medium text-primaire underline">
+            Retour à la connexion
+          </Link>
+        </p>
+      </div>
+    );
+  }
 
   return (
     <form action={action} className="space-y-4" noValidate>
-      <input type="hidden" name="suite" value={suite} />
-
       {etat.statut === 'erreur' && !etat.champs ? (
         <Alerte ton="danger">{etat.message}</Alerte>
       ) : null}
@@ -41,29 +54,11 @@ export function FormulaireConnexion({ suite }: { suite: string }) {
         />
       </Champ>
 
-      <Champ label="Mot de passe" htmlFor="motDePasse" erreur={champs['motDePasse']} obligatoire>
-        <Saisie
-          id="motDePasse"
-          name="motDePasse"
-          type="password"
-          autoComplete="current-password"
-          required
-          erreur={Boolean(champs['motDePasse'])}
-        />
-      </Champ>
-
-      <p className="text-right text-sm">
-        <Link href="/mot-de-passe-oublie" className="font-medium text-primaire underline">
-          Mot de passe oublié ?
-        </Link>
-      </p>
-
       <BoutonEnvoi />
 
       <p className="text-center text-sm text-encre-douce">
-        Pas encore de compte ?{' '}
-        <Link href="/inscription" className="font-medium text-primaire underline">
-          Créer un compte
+        <Link href="/connexion" className="font-medium text-primaire underline">
+          Retour à la connexion
         </Link>
       </p>
     </form>

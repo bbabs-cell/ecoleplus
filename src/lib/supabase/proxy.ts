@@ -5,7 +5,13 @@ import { COOKIE_LANGUE, estLocaleConnue, normaliserLocale } from '@/i18n/locales
 import type { Database } from '@/lib/types/database';
 
 /** Routes accessibles sans session. Tout le reste exige une authentification. */
-const ROUTES_PUBLIQUES = ['/connexion', '/inscription', '/auth', '/invitation'];
+const ROUTES_PUBLIQUES = [
+  '/connexion',
+  '/inscription',
+  '/mot-de-passe-oublie',
+  '/auth',
+  '/invitation',
+];
 
 function estPublique(chemin: string): boolean {
   return ROUTES_PUBLIQUES.some(
