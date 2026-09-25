@@ -29,7 +29,7 @@ export function SelecteurAnnee({
   if (annees.length === 0) return null;
 
   return (
-    <div className="flex items-center gap-2 rounded-douce border border-bordure bg-carte px-2.5 py-1.5">
+    <div className="flex items-center gap-2 rounded-douce border border-bordure bg-carte px-2.5 py-0 lg:py-1.5">
       <CalendarRange className="size-4 shrink-0 text-encre-douce" aria-hidden="true" />
       <label htmlFor="selecteur-annee" className="sr-only">
         Année académique
@@ -44,7 +44,7 @@ export function SelecteurAnnee({
           suivants.delete('page');
           router.push(`?${suivants.toString()}`);
         }}
-        className="bg-transparent text-sm font-medium text-encre outline-none"
+        className="min-h-11 bg-transparent text-sm font-medium text-encre outline-none lg:min-h-0"
       >
         {annees.map((annee) => (
           <option key={annee.id} value={annee.id}>

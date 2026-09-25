@@ -11,9 +11,12 @@ const VARIANTES: Record<Variante, string> = {
   danger: 'bg-danger text-white hover:brightness-110',
 };
 
+// Les hauteurs sont plus généreuses tant qu'on est sous `lg` : un doigt vise
+// mal en dessous de 44 px, alors qu'un pointeur est précis. La densité
+// d'origine revient sur grand écran.
 const TAILLES: Record<Taille, string> = {
-  normale: 'h-10 px-4 text-sm',
-  petite: 'h-8 px-3 text-xs',
+  normale: 'h-11 px-4 text-sm lg:h-10',
+  petite: 'h-11 px-3 text-xs lg:h-8',
 };
 
 interface ProprietesBouton extends ButtonHTMLAttributes<HTMLButtonElement> {

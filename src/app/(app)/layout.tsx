@@ -9,6 +9,7 @@ import { SelecteurLangue } from '@/components/i18n/selecteur-langue';
 import { localeActive } from '@/i18n/serveur';
 import { traduire } from '@/i18n/dictionnaires';
 import { SelecteurEtablissement } from '@/components/coque/selecteur-etablissement';
+import { Coque } from '@/components/coque/coque';
 import { Etiquette } from '@/components/ui/etiquette';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -82,67 +83,87 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   }));
 
   const nom = nomAffiche(profil, reglages.name_display_format);
+  const lettres = initiales(profil, reglages.name_display_format);
+
+  const marque = (
+    <Link href="/tableau-de-bord" className="flex min-h-11 items-center gap-2.5 lg:min-h-0">
+      <span className="flex size-8 shrink-0 items-center justify-center rounded-douce bg-primaire text-primaire-contraste">
+        <GraduationCap className="size-4" aria-hidden="true" />
+      </span>
+      <span className="truncate text-sm font-semibold tracking-tight text-encre">{brand.name}</span>
+    </Link>
+  );
+
+  const entete = (
+    <>
+      <div className="space-y-1">
+        <p className="truncate text-sm font-medium text-encre">{organisation.name}</p>
+        <Etiquette ton={adhesion.role.code === 'OWNER' ? 'primaire' : 'neutre'}>
+          {adhesion.role.label}
+        </Etiquette>
+      </div>
+
+      <SelecteurEtablissement
+        etablissements={contexte.etablissements.map(({ id, name }) => ({ id, name }))}
+        actifId={contexte.etablissementActif?.id ?? null}
+      />
+    </>
+  );
+
+  const pied = (
+    <>
+      <div className="border-t border-bordure pt-3">
+        <SelecteurLangue locale={locale} />
+      </div>
+
+      <div className="flex items-center gap-2.5 border-t border-bordure pt-3">
+        <span
+          className="flex size-9 shrink-0 items-center justify-center rounded-full bg-accent-douce text-xs font-semibold text-accent"
+          aria-hidden="true"
+        >
+          {lettres}
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium text-encre">{nom || 'Sans nom'}</p>
+          <p className="truncate text-xs text-encre-douce">{contexte.utilisateur.email}</p>
+        </div>
+        <form action={deconnexionAction}>
+          <button
+            type="submit"
+            className="flex size-11 items-center justify-center rounded-douce text-encre-douce transition-colors hover:bg-surface-2 hover:text-encre"
+            aria-label={traduire('Se déconnecter', locale)}
+            title={traduire('Se déconnecter', locale)}
+          >
+            <LogOut className="size-4" aria-hidden="true" />
+          </button>
+        </form>
+      </div>
+    </>
+  );
 
   return (
-    <div className="flex min-h-dvh flex-col lg:flex-row">
-      <aside className="flex shrink-0 flex-col gap-4 border-b border-bordure bg-surface-2/60 p-4 lg:h-dvh lg:w-64 lg:border-e lg:border-b-0">
-        <Link href="/tableau-de-bord" className="flex items-center gap-2.5">
-          <span className="flex size-8 items-center justify-center rounded-douce bg-primaire text-primaire-contraste">
-            <GraduationCap className="size-4" aria-hidden="true" />
-          </span>
-          <span className="truncate text-sm font-semibold tracking-tight text-encre">
-            {brand.name}
-          </span>
-        </Link>
-
-        <div className="space-y-1">
-          <p className="truncate text-sm font-medium text-encre">{organisation.name}</p>
-          <Etiquette ton={adhesion.role.code === 'OWNER' ? 'primaire' : 'neutre'}>
-            {adhesion.role.label}
-          </Etiquette>
-        </div>
-
-        <SelecteurEtablissement
-          etablissements={contexte.etablissements.map(({ id, name }) => ({ id, name }))}
-          actifId={contexte.etablissementActif?.id ?? null}
+    <Coque
+      marque={marque}
+      entete={entete}
+      navigation={
+        <Navigation
+          entrees={entreesTraduites}
+          libelleNavigation={traduire('Navigation principale', locale)}
         />
-
-        <div className="lg:flex-1">
-          <Navigation
-            entrees={entreesTraduites}
-            libelleNavigation={traduire('Navigation principale', locale)}
-          />
-        </div>
-
-        <div className="border-t border-bordure pt-3">
-          <SelecteurLangue locale={locale} />
-        </div>
-
-        <div className="flex items-center gap-2.5 border-t border-bordure pt-3">
-          <span
-            className="flex size-8 shrink-0 items-center justify-center rounded-full bg-accent-douce text-xs font-semibold text-accent"
-            aria-hidden="true"
-          >
-            {initiales(profil, reglages.name_display_format)}
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium text-encre">{nom || 'Sans nom'}</p>
-            <p className="truncate text-xs text-encre-douce">{contexte.utilisateur.email}</p>
-          </div>
-          <form action={deconnexionAction}>
-            <button
-              type="submit"
-              className="rounded-douce p-2 text-encre-douce transition-colors hover:bg-surface-2 hover:text-encre"
-              aria-label={traduire('Se déconnecter', locale)}
-              title={traduire('Se déconnecter', locale)}
-            >
-              <LogOut className="size-4" aria-hidden="true" />
-            </button>
-          </form>
-        </div>
-      </aside>
-
-      <main className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">{children}</main>
-    </div>
+      }
+      pied={pied}
+      raccourci={
+        <span
+          className="flex size-9 shrink-0 items-center justify-center rounded-full bg-accent-douce text-xs font-semibold text-accent"
+          aria-hidden="true"
+        >
+          {lettres}
+        </span>
+      }
+      libelleOuvrir={traduire('Ouvrir le menu', locale)}
+      libelleFermer={traduire('Fermer le menu', locale)}
+    >
+      {children}
+    </Coque>
   );
 }

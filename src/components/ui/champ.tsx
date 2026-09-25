@@ -1,9 +1,16 @@
 import type { ComponentPropsWithRef, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
+// `text-base` (16 px) sous `lg` n'est pas un choix esthétique : en dessous de
+// 16 px, Safari iOS zoome automatiquement sur le champ à la mise au point et
+// l'utilisateur se retrouve avec une page décalée qu'il doit refermer à la
+// main. La taille d'origine revient sur grand écran.
+//
+// `min-h-11` donne la même cible tactile que les boutons.
 const BASE =
-  'w-full rounded-douce border bg-carte px-3 py-2 text-sm text-encre placeholder:text-encre-douce/70 ' +
-  'transition-colors disabled:opacity-50';
+  'w-full min-h-11 rounded-douce border bg-carte px-3 py-2 text-base text-encre ' +
+  'placeholder:text-encre-douce/70 transition-colors disabled:opacity-50 ' +
+  'lg:min-h-0 lg:text-sm';
 
 interface Habillage {
   label: string;

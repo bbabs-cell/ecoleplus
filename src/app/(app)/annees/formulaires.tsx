@@ -155,7 +155,7 @@ export function PeriodesAnnee({
                   <input type="hidden" name="periodeId" value={periode.id} />
                   <button
                     type="submit"
-                    className="rounded p-1 text-encre-douce transition-colors hover:bg-surface-2 hover:text-danger"
+                    className="flex size-11 shrink-0 items-center justify-center rounded text-encre-douce transition-colors hover:bg-surface-2 hover:text-danger lg:size-8"
                     aria-label={`Supprimer la période ${periode.name}`}
                   >
                     <Trash2 className="size-3.5" aria-hidden="true" />

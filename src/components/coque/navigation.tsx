@@ -77,7 +77,9 @@ export function Navigation({
             href={entree.href}
             aria-current={actif ? 'page' : undefined}
             className={cn(
-              'flex items-center gap-2.5 rounded-douce px-3 py-2 text-sm font-medium transition-colors',
+              // 44 px de haut sur mobile : c'est la cible tactile recommandée.
+              // À partir de lg, le pointeur est précis et la densité reprend.
+              'flex min-h-11 items-center gap-2.5 rounded-douce px-3 py-2 text-sm font-medium transition-colors lg:min-h-0',
               // Un trait fin ouvre chaque groupe : socle, académique, administration.
               entree.separateur && 'mt-3 border-t border-bordure pt-3',
               actif

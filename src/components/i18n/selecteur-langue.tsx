@@ -27,7 +27,7 @@ export function SelecteurLangue({ locale }: { locale: Locale }) {
         name="langue"
         defaultValue={locale}
         onChange={(evenement) => evenement.currentTarget.form?.requestSubmit()}
-        className="min-h-9 w-full rounded-douce border border-bordure bg-carte px-2 py-1 text-xs text-encre"
+        className="min-h-11 w-full rounded-douce lg:min-h-9 border border-bordure bg-carte px-2 py-1 text-xs text-encre"
       >
         {LOCALES.map((valeur) => (
           <option key={valeur} value={valeur}>

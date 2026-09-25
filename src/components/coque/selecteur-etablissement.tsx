@@ -44,14 +44,14 @@ export function SelecteurEtablissement({
       <label htmlFor="etablissementId" className="sr-only">
         Établissement actif
       </label>
-      <div className="flex items-center gap-2 rounded-douce border border-bordure bg-carte px-2.5 py-1.5">
+      <div className="flex items-center gap-2 rounded-douce border border-bordure bg-carte px-2.5 py-0 lg:py-1.5">
         <Building2 className="size-4 shrink-0 text-encre-douce" aria-hidden="true" />
         <select
           id="etablissementId"
           name="etablissementId"
           defaultValue={actifId ?? ''}
           onChange={() => formulaire.current?.requestSubmit()}
-          className="w-full bg-transparent text-sm font-medium text-encre outline-none"
+          className="w-full min-h-11 bg-transparent text-sm font-medium text-encre outline-none lg:min-h-0"
         >
           {etablissements.map((etablissement) => (
             <option key={etablissement.id} value={etablissement.id}>

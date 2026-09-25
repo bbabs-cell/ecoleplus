@@ -30,6 +30,8 @@ const en: Dictionnaire = {
   "Journal d'audit": 'Audit log',
   Organisation: 'Organisation',
   'Navigation principale': 'Main navigation',
+  'Ouvrir le menu': 'Open menu',
+  'Fermer le menu': 'Close menu',
   'Se déconnecter': 'Sign out',
 
   // Vocabulaire partagé
@@ -97,6 +99,8 @@ const es: Dictionnaire = {
   "Journal d'audit": 'Registro de auditoría',
   Organisation: 'Organización',
   'Navigation principale': 'Navegación principal',
+  'Ouvrir le menu': 'Abrir el menú',
+  'Fermer le menu': 'Cerrar el menú',
   'Se déconnecter': 'Cerrar sesión',
 
   Enregistrer: 'Guardar',
@@ -161,6 +165,8 @@ const ar: Dictionnaire = {
   "Journal d'audit": 'سجل التدقيق',
   Organisation: 'المؤسسة',
   'Navigation principale': 'التنقل الرئيسي',
+  'Ouvrir le menu': 'فتح القائمة',
+  'Fermer le menu': 'إغلاق القائمة',
   'Se déconnecter': 'تسجيل الخروج',
 
   Enregistrer: 'حفظ',
