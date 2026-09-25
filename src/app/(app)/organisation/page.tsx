@@ -5,6 +5,7 @@ import { formaterDate } from '@/lib/format';
 import { Carte, CorpsCarte, EnTeteCarte, SousTitreCarte, TitreCarte } from '@/components/ui/carte';
 import { Alerte } from '@/components/ui/alerte';
 import { FormulaireFiche, FormulaireReglages } from './formulaires';
+import { TitrePage } from '@/components/ui/titre-page';
 
 export const metadata: Metadata = { title: 'Organisation' };
 
@@ -27,7 +28,7 @@ export default async function PageOrganisation() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-encre">Organisation</h1>
+        <TitrePage teinte="admin">Organisation</TitrePage>
         <p className="text-sm text-encre-douce">
           {nomPays(organisation.country_code, locale)} · créée le{' '}
           {formaterDate(organisation.created_at, reglages)}

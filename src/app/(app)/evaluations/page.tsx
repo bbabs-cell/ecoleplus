@@ -14,6 +14,7 @@ import { Etiquette } from '@/components/ui/etiquette';
 import { Pagination } from '@/components/ui/pagination';
 import { SelecteurAnnee } from '@/components/academique/selecteur-annee';
 import { FormulaireEvaluation } from './formulaires';
+import { TitrePage } from '@/components/ui/titre-page';
 
 export const metadata: Metadata = { title: 'Évaluations' };
 
@@ -47,7 +48,7 @@ export default async function PageEvaluations({
   if (!annee) {
     return (
       <div className="mx-auto max-w-4xl space-y-6">
-        <h1 className="text-2xl font-semibold tracking-tight text-encre">Évaluations</h1>
+        <TitrePage teinte="notation">Évaluations</TitrePage>
         <Alerte ton="alerte" titre="Aucune année académique">
           Une évaluation se rattache à une année.{' '}
           <Link href="/annees" className="font-medium text-primaire">
@@ -74,7 +75,7 @@ export default async function PageEvaluations({
     <div className="mx-auto max-w-4xl space-y-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight text-encre">Évaluations</h1>
+          <TitrePage teinte="notation">Évaluations</TitrePage>
           <p className="text-sm text-encre-douce">
             {contexte.etablissementActif.name} · {evaluations.total} évaluation
             {evaluations.total > 1 ? 's' : ''} sur {annee.name}

@@ -14,6 +14,7 @@ import { Etiquette } from '@/components/ui/etiquette';
 import { SelecteurAnnee } from '@/components/academique/selecteur-annee';
 import { SelecteursBulletin } from './selecteurs';
 import { ReglageRang, VerifierClasse, VerifierUnBulletin } from './actions-client';
+import { TitrePage } from '@/components/ui/titre-page';
 
 export const metadata: Metadata = { title: 'Bulletins' };
 
@@ -39,7 +40,7 @@ export default async function PageBulletins({
   if (!annee) {
     return (
       <div className="mx-auto max-w-4xl space-y-6">
-        <h1 className="text-2xl font-semibold tracking-tight text-encre">Bulletins</h1>
+        <TitrePage teinte="notation">Bulletins</TitrePage>
         <Alerte ton="alerte" titre="Aucune année académique">
           Un bulletin se rattache à une année.{' '}
           <Link href="/annees" className="font-medium text-primaire">
@@ -70,7 +71,7 @@ export default async function PageBulletins({
     <div className="mx-auto max-w-4xl space-y-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight text-encre">Bulletins</h1>
+          <TitrePage teinte="notation">Bulletins</TitrePage>
           <p className="text-sm text-encre-douce">
             {contexte.etablissementActif.name} · {annee.name}
           </p>

@@ -19,6 +19,7 @@ import {
   ReglageDevise,
   SelecteurClasseSoldes,
 } from './formulaires';
+import { TitrePage } from '@/components/ui/titre-page';
 
 export const metadata: Metadata = { title: 'Finances' };
 
@@ -44,7 +45,7 @@ export default async function PageFinances({
   if (!annee) {
     return (
       <div className="mx-auto max-w-4xl space-y-6">
-        <h1 className="text-2xl font-semibold tracking-tight text-encre">Finances</h1>
+        <TitrePage teinte="finances">Finances</TitrePage>
         <Alerte ton="alerte" titre="Aucune année académique">
           Les frais se rattachent à une année.{' '}
           <Link href="/annees" className="font-medium text-primaire">
@@ -69,7 +70,7 @@ export default async function PageFinances({
     <div className="mx-auto max-w-4xl space-y-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight text-encre">Finances</h1>
+          <TitrePage teinte="finances">Finances</TitrePage>
           <p className="text-sm text-encre-douce">
             {contexte.etablissementActif.name} · {frais.length} frais sur {annee.name} · devise{' '}
             {devise}

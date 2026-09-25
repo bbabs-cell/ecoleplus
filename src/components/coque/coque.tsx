@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useId, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -42,6 +43,8 @@ export function Coque({
 }) {
   const [ouvert, setOuvert] = useState(false);
   const idTiroir = useId();
+  // Sert uniquement de clé de remontage : changer de page rejoue l'entrée.
+  const chemin = usePathname();
 
   // Échap referme, et le fond ne défile pas pendant que le tiroir est ouvert.
   useEffect(() => {
@@ -138,8 +141,13 @@ export function Coque({
       <main className="min-w-0 flex-1 px-4 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:px-6 lg:px-8 lg:py-8">
         {/* Pas de largeur maximale ici : chaque page pose la sienne, adaptée
             à son contenu (`max-w-3xl` pour un formulaire, `max-w-5xl` pour une
-            liste). En ajouter une seconde ne contraindrait rien. */}
-        {children}
+            liste). En ajouter une seconde ne contraindrait rien.
+
+            La clé force React à remonter le sous-arbre à chaque changement de
+            page : sans elle, l'animation d'entrée ne jouerait qu'une fois. */}
+        <div key={chemin} className="anim-apparition">
+          {children}
+        </div>
       </main>
     </div>
   );

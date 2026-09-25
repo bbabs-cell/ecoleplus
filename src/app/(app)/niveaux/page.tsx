@@ -5,6 +5,7 @@ import { listerNiveaux } from '@/services/academique';
 import { Carte } from '@/components/ui/carte';
 import { EtatVide } from '@/components/ui/etats';
 import { FormulaireNiveau, LigneNiveau } from './formulaires';
+import { TitrePage } from '@/components/ui/titre-page';
 
 export const metadata: Metadata = { title: 'Niveaux' };
 
@@ -18,7 +19,7 @@ export default async function PageNiveaux() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-encre">Niveaux</h1>
+        <TitrePage teinte="academique">Niveaux</TitrePage>
         <p className="text-sm text-encre-douce">
           {contexte.etablissementActif.name} · CP, sixième, Year 4, Licence 1 — le nom est libre,
           seul le rang fixe la progression.

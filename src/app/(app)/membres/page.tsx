@@ -12,6 +12,7 @@ import { EtatVide } from '@/components/ui/etats';
 import { Etiquette } from '@/components/ui/etiquette';
 import { Pagination } from '@/components/ui/pagination';
 import { ActionsInvitation, ActionsMembre, FormulaireInvitation } from './formulaires';
+import { TitrePage } from '@/components/ui/titre-page';
 
 export const metadata: Metadata = { title: 'Membres' };
 
@@ -39,7 +40,7 @@ export default async function PageMembres({
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-encre">Membres</h1>
+        <TitrePage teinte="admin">Membres</TitrePage>
         <p className="text-sm text-encre-douce">
           Comptes rattachés à l&apos;organisation, leur rôle et leur portée.
         </p>

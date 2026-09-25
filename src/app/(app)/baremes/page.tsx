@@ -18,6 +18,7 @@ import {
   FormulaireCategorie,
   FormulaireCoefficients,
 } from './formulaires';
+import { TitrePage } from '@/components/ui/titre-page';
 
 export const metadata: Metadata = { title: 'Barèmes' };
 
@@ -54,7 +55,7 @@ export default async function PageBaremes({
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-encre">Barèmes</h1>
+        <TitrePage teinte="notation">Barèmes</TitrePage>
         <p className="text-sm text-encre-douce">
           {contexte.etablissementActif.name} · {baremes.length} barème
           {baremes.length > 1 ? 's' : ''}, {categories.length} catégorie

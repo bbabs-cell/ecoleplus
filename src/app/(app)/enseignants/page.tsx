@@ -6,6 +6,7 @@ import { Carte } from '@/components/ui/carte';
 import { EtatVide } from '@/components/ui/etats';
 import { Pagination } from '@/components/ui/pagination';
 import { FormulaireEnseignant, LigneEnseignant } from './formulaires';
+import { TitrePage } from '@/components/ui/titre-page';
 
 export const metadata: Metadata = { title: 'Enseignants' };
 
@@ -24,7 +25,7 @@ export default async function PageEnseignants({
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-encre">Enseignants</h1>
+        <TitrePage teinte="personnes">Enseignants</TitrePage>
         <p className="text-sm text-encre-douce">
           {contexte.etablissementActif.name} · une fiche existe indépendamment d&apos;un compte
           applicatif.

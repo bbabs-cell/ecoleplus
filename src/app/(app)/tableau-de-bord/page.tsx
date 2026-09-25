@@ -8,24 +8,59 @@ import { nomPays } from '@/lib/reference';
 import { Carte, CorpsCarte } from '@/components/ui/carte';
 import { Alerte } from '@/components/ui/alerte';
 import { Etiquette } from '@/components/ui/etiquette';
+import { cn } from '@/lib/utils';
+import { TitrePage } from '@/components/ui/titre-page';
 
 export const metadata: Metadata = { title: 'Tableau de bord' };
+
+/**
+ * Teintes des indicateurs, écrites en toutes lettres : Tailwind ne voit pas
+ * les noms de classes construits à l'exécution.
+ */
+const PASTILLES = {
+  socle: 'bg-teinte-socle-douce text-teinte-socle',
+  academique: 'bg-teinte-academique-douce text-teinte-academique',
+  personnes: 'bg-teinte-personnes-douce text-teinte-personnes',
+  admin: 'bg-teinte-admin-douce text-teinte-admin',
+} as const;
+
+const LISERES = {
+  socle: 'before:bg-teinte-socle',
+  academique: 'before:bg-teinte-academique',
+  personnes: 'before:bg-teinte-personnes',
+  admin: 'before:bg-teinte-admin',
+} as const;
 
 function Indicateur({
   libelle,
   valeur,
   Icone,
   href,
+  teinte,
 }: {
   libelle: string;
   valeur: number;
   Icone: typeof Users;
   href?: string;
+  teinte: keyof typeof PASTILLES;
 }) {
   const contenu = (
-    <Carte className="h-full transition-shadow hover:shadow-relief">
-      <CorpsCarte className="flex items-center gap-4">
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-douce bg-primaire-douce text-primaire">
+    <Carte
+      className={cn(
+        'releve relative h-full overflow-hidden',
+        // Un liseré de la couleur du domaine, du côté du bord : il rattache
+        // le chiffre à l'écran où on ira le consulter.
+        'before:absolute before:inset-y-0 before:start-0 before:w-1 before:content-[""]',
+        LISERES[teinte],
+      )}
+    >
+      <CorpsCarte className="flex items-center gap-4 ps-6">
+        <span
+          className={cn(
+            'flex size-11 shrink-0 items-center justify-center rounded-douce',
+            PASTILLES[teinte],
+          )}
+        >
           <Icone className="size-5" aria-hidden="true" />
         </span>
         <div className="min-w-0">
@@ -37,7 +72,7 @@ function Indicateur({
   );
 
   return href ? (
-    <Link href={href} className="block">
+    <Link href={href} className="block focus-visible:outline-none">
       {contenu}
     </Link>
   ) : (
@@ -62,26 +97,28 @@ export default async function PageTableauDeBord() {
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-encre">
+        <TitrePage teinte="socle">
           Bonjour{prenom ? ` ${prenom}` : ''}
-        </h1>
+        </TitrePage>
         <p className="text-sm text-encre-douce">
           {organisation.name} · {nomPays(organisation.country_code, reglages.default_locale)} ·{' '}
           <Etiquette>{adhesion.role.label}</Etiquette>
         </p>
       </header>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="anim-cascade grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Indicateur
           libelle={stats.etablissements > 1 ? 'Établissements actifs' : 'Établissement actif'}
           valeur={stats.etablissements}
           Icone={Building2}
+          teinte="socle"
           href={permissions.has('establishments.read') ? '/etablissements' : undefined}
         />
         <Indicateur
           libelle={stats.membres > 1 ? 'Membres actifs' : 'Membre actif'}
           valeur={stats.membres}
           Icone={Users}
+          teinte="admin"
           href={permissions.has('members.read') ? '/membres' : undefined}
         />
         {stats.invitationsEnAttente !== null ? (
@@ -89,6 +126,7 @@ export default async function PageTableauDeBord() {
             libelle="Invitations en attente"
             valeur={stats.invitationsEnAttente}
             Icone={MailPlus}
+            teinte="admin"
             href="/membres"
           />
         ) : null}
@@ -104,23 +142,26 @@ export default async function PageTableauDeBord() {
           </h2>
 
           {academique.anneeNom ? (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="anim-cascade grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Indicateur
                 libelle="Apprenants inscrits"
                 valeur={academique.apprenantsActifs}
                 Icone={UsersRound}
+                teinte="personnes"
                 href="/apprenants"
               />
               <Indicateur
                 libelle={academique.classes > 1 ? 'Classes ouvertes' : 'Classe ouverte'}
                 valeur={academique.classes}
                 Icone={School}
+                teinte="personnes"
                 href={permissions.has('classes.read') ? '/classes' : undefined}
               />
               <Indicateur
                 libelle={academique.enseignants > 1 ? 'Enseignants actifs' : 'Enseignant actif'}
                 valeur={academique.enseignants}
                 Icone={GraduationCap}
+                teinte="personnes"
                 href={permissions.has('teachers.read') ? '/enseignants' : undefined}
               />
             </div>

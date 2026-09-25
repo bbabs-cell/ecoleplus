@@ -6,6 +6,7 @@ import { Carte } from '@/components/ui/carte';
 import { EtatVide } from '@/components/ui/etats';
 import { Pagination } from '@/components/ui/pagination';
 import { FormulaireCreation, LigneEtablissement } from './formulaires';
+import { TitrePage } from '@/components/ui/titre-page';
 
 export const metadata: Metadata = { title: 'Établissements' };
 
@@ -25,7 +26,7 @@ export default async function PageEtablissements({
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-encre">Établissements</h1>
+        <TitrePage teinte="socle">Établissements</TitrePage>
         <p className="text-sm text-encre-douce">
           Écoles, campus, facultés ou centres rattachés à votre organisation.
         </p>

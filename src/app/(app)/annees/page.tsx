@@ -7,6 +7,7 @@ import { Carte, CorpsCarte } from '@/components/ui/carte';
 import { EtatVide } from '@/components/ui/etats';
 import { Etiquette } from '@/components/ui/etiquette';
 import { BoutonAnneeCourante, FormulaireAnnee, PeriodesAnnee } from './formulaires';
+import { TitrePage } from '@/components/ui/titre-page';
 
 export const metadata: Metadata = { title: 'Années académiques' };
 
@@ -23,7 +24,7 @@ export default async function PageAnnees() {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-encre">Années académiques</h1>
+        <TitrePage teinte="academique">Années académiques</TitrePage>
         <p className="text-sm text-encre-douce">
           {contexte.etablissementActif.name} · le libellé et le découpage sont libres : aucun
           calendrier n&apos;est présupposé.

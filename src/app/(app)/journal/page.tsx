@@ -6,6 +6,7 @@ import { formaterDateHeure } from '@/lib/format';
 import { Carte, EnTeteCarte, SousTitreCarte, TitreCarte } from '@/components/ui/carte';
 import { EtatVide } from '@/components/ui/etats';
 import { Pagination } from '@/components/ui/pagination';
+import { TitrePage } from '@/components/ui/titre-page';
 
 export const metadata: Metadata = { title: "Journal d'audit" };
 
@@ -34,7 +35,7 @@ export default async function PageJournal({
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-encre">Journal d&apos;audit</h1>
+        <TitrePage teinte="admin">Journal d&apos;audit</TitrePage>
         <p className="text-sm text-encre-douce">
           Trace des opérations sensibles. Ce journal est en écriture seule : rien ne s&apos;y
           modifie ni ne s&apos;y supprime.

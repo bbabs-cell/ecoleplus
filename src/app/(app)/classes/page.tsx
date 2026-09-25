@@ -10,6 +10,7 @@ import { EtatVide } from '@/components/ui/etats';
 import { Alerte } from '@/components/ui/alerte';
 import { SelecteurAnnee } from '@/components/academique/selecteur-annee';
 import { CarteClasse, FormulaireClasse } from './formulaires';
+import { TitrePage } from '@/components/ui/titre-page';
 
 export const metadata: Metadata = { title: 'Classes' };
 
@@ -28,7 +29,7 @@ export default async function PageClasses({
   if (!annee) {
     return (
       <div className="mx-auto max-w-4xl space-y-6">
-        <h1 className="text-2xl font-semibold tracking-tight text-encre">Classes</h1>
+        <TitrePage teinte="personnes">Classes</TitrePage>
         <Alerte ton="alerte" titre="Aucune année académique">
           Les classes se rattachent à une année.{' '}
           <Link href="/annees" className="font-medium text-primaire">
@@ -59,7 +60,7 @@ export default async function PageClasses({
     <div className="mx-auto max-w-4xl space-y-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight text-encre">Classes</h1>
+          <TitrePage teinte="personnes">Classes</TitrePage>
           <p className="text-sm text-encre-douce">
             {contexte.etablissementActif.name} · {classes.length} classe
             {classes.length > 1 ? 's' : ''}

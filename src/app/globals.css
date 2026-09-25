@@ -2,8 +2,10 @@
 
 /*
  * Direction : premium, moderne, chaleureux (docs/design-guidelines.md).
- * Le fond n'est pas blanc mais un papier chaud ; la profondeur vient d'ombres
- * basses et de bordures franches, jamais de dégradés ni de verre.
+ *
+ * Le fond n'est jamais blanc — papier chaud en clair, terre sombre en sombre.
+ * La couleur n'est pas décorative : chaque domaine fonctionnel porte sa
+ * teinte, et c'est elle qui dit où l'on se trouve sans avoir à lire.
  */
 @theme inline {
   --color-surface: var(--surface);
@@ -24,46 +26,86 @@
   --color-danger: var(--danger);
   --color-danger-douce: var(--danger-douce);
 
+  /* Teintes de domaine : une par famille d'écrans. */
+  --color-teinte-socle: var(--t-socle);
+  --color-teinte-socle-douce: var(--t-socle-douce);
+  --color-teinte-academique: var(--t-academique);
+  --color-teinte-academique-douce: var(--t-academique-douce);
+  --color-teinte-personnes: var(--t-personnes);
+  --color-teinte-personnes-douce: var(--t-personnes-douce);
+  --color-teinte-presences: var(--t-presences);
+  --color-teinte-presences-douce: var(--t-presences-douce);
+  --color-teinte-notation: var(--t-notation);
+  --color-teinte-notation-douce: var(--t-notation-douce);
+  --color-teinte-finances: var(--t-finances);
+  --color-teinte-finances-douce: var(--t-finances-douce);
+  --color-teinte-admin: var(--t-admin);
+  --color-teinte-admin-douce: var(--t-admin-douce);
+
   --radius-douce: 0.625rem;
   --shadow-carte: 0 1px 2px rgb(35 32 28 / 0.04), 0 1px 3px rgb(35 32 28 / 0.06);
-  --shadow-relief: 0 4px 12px rgb(35 32 28 / 0.08), 0 1px 3px rgb(35 32 28 / 0.05);
+  --shadow-relief: 0 6px 20px rgb(35 32 28 / 0.10), 0 2px 6px rgb(35 32 28 / 0.06);
+  --shadow-portee: 0 16px 40px rgb(35 32 28 / 0.14), 0 4px 10px rgb(35 32 28 / 0.08);
+
+  /* Grammaire du mouvement. Trois durées, une courbe : au-delà, ça se voit. */
+  --duree-vive: 140ms;
+  --duree: 240ms;
+  --duree-ample: 420ms;
+  --elan: cubic-bezier(0.22, 1, 0.36, 1);
+  --elan-doux: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 :root {
-  --surface: #faf7f2;
-  --surface-2: #f3eee5;
-  --carte: #ffffff;
-  --encre: #23201c;
-  --encre-douce: #6b6459;
-  --bordure: #e5ddd0;
+  --surface: #f7f3ec;
+  --surface-2: #efe9de;
+  /* Pas de blanc pur : une carte est du papier, pas un écran allumé. */
+  --carte: #fffdf8;
+  --encre: #221f1a;
+  --encre-douce: #675f54;
+  --bordure: #d2c4ac;
 
-  --primaire: #1e5f57;
+  --primaire: #1a5f56;
   --primaire-contraste: #ffffff;
-  --primaire-douce: #e3efec;
+  --primaire-douce: #dfeeea;
 
-  --accent: #b2652f;
-  --accent-douce: #f7ece1;
+  --accent: #96501f;
+  --accent-douce: #f8eadc;
 
-  --succes: #2f6b45;
-  --succes-douce: #e5f0e8;
-  --alerte: #8a5a12;
-  --alerte-douce: #faeed8;
-  --danger: #9b2f2f;
-  --danger-douce: #f8e6e4;
+  --succes: #2b6b43;
+  --succes-douce: #e2f0e7;
+  --alerte: #8a5710;
+  --alerte-douce: #fbedd5;
+  --danger: #9a2d2d;
+  --danger-douce: #f9e5e3;
+
+  --t-socle: #1a5f56;
+  --t-socle-douce: #dfeeea;
+  --t-academique: #37458a;
+  --t-academique-douce: #e5e7f7;
+  --t-personnes: #8a3a60;
+  --t-personnes-douce: #f8e4ee;
+  --t-presences: #935410;
+  --t-presences-douce: #fbebd4;
+  --t-notation: #64408f;
+  --t-notation-douce: #eee4f9;
+  --t-finances: #1c6747;
+  --t-finances-douce: #dff0e8;
+  --t-admin: #454f63;
+  --t-admin-douce: #e7e9ee;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --surface: #16140f;
-    --surface-2: #1e1b16;
-    --carte: #221e19;
-    --encre: #f2ece2;
-    --encre-douce: #a89e90;
-    --bordure: #35302a;
+    --surface: #15130f;
+    --surface-2: #1d1a15;
+    --carte: #221e18;
+    --encre: #f3ede3;
+    --encre-douce: #aaa093;
+    --bordure: #423a31;
 
     --primaire: #6fbdae;
     --primaire-contraste: #10221f;
-    --primaire-douce: #1d332e;
+    --primaire-douce: #1c332e;
 
     --accent: #e0a069;
     --accent-douce: #33261a;
@@ -74,6 +116,21 @@
     --alerte-douce: #2e2515;
     --danger: #e28b84;
     --danger-douce: #331d1c;
+
+    --t-socle: #6fbdae;
+    --t-socle-douce: #1c332e;
+    --t-academique: #96a5f2;
+    --t-academique-douce: #1f2442;
+    --t-personnes: #e48fb3;
+    --t-personnes-douce: #3b2030;
+    --t-presences: #e0a069;
+    --t-presences-douce: #33261a;
+    --t-notation: #bb9dea;
+    --t-notation-douce: #2b2139;
+    --t-finances: #74caa0;
+    --t-finances-douce: #182e23;
+    --t-admin: #a6b0c2;
+    --t-admin-douce: #262b34;
   }
 }
 
@@ -90,12 +147,112 @@ body {
   border-radius: 0.25rem;
 }
 
+/* ---------------------------------------------------------------------------
+ * Mouvement
+ *
+ * Entrer, répondre au survol, signaler un changement. Rien qui bouge sans
+ * dire quelque chose — une animation qui n'informe pas fatigue.
+ * ------------------------------------------------------------------------- */
+
+@keyframes ep-apparition {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ep-apparition-douce {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ep-echelle {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ep-halo {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.anim-apparition {
+  animation: ep-apparition var(--duree-ample) var(--elan) both;
+}
+
+.anim-echelle {
+  animation: ep-echelle var(--duree) var(--elan) both;
+}
+
+.anim-fondu {
+  animation: ep-apparition-douce var(--duree) var(--elan-doux) both;
+}
+
+/*
+ * Cascade : chaque enfant entre un cran après le précédent. Le décalage est
+ * plafonné — au-delà d'une douzaine, la dernière ligne arriverait trop tard
+ * et la page paraîtrait lente au lieu de vivante.
+ */
+.anim-cascade > * {
+  animation: ep-apparition var(--duree) var(--elan) both;
+}
+.anim-cascade > *:nth-child(1) { animation-delay: 0ms; }
+.anim-cascade > *:nth-child(2) { animation-delay: 40ms; }
+.anim-cascade > *:nth-child(3) { animation-delay: 80ms; }
+.anim-cascade > *:nth-child(4) { animation-delay: 120ms; }
+.anim-cascade > *:nth-child(5) { animation-delay: 160ms; }
+.anim-cascade > *:nth-child(6) { animation-delay: 200ms; }
+.anim-cascade > *:nth-child(7) { animation-delay: 240ms; }
+.anim-cascade > *:nth-child(8) { animation-delay: 280ms; }
+.anim-cascade > *:nth-child(n + 9) { animation-delay: 320ms; }
+
+/* Relief au survol : la carte se soulève, elle ne clignote pas. */
+.releve {
+  transition:
+    transform var(--duree) var(--elan),
+    box-shadow var(--duree) var(--elan),
+    border-color var(--duree) var(--elan);
+}
+@media (hover: hover) {
+  .releve:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-relief);
+  }
+}
+
+/*
+ * Le confort de lecture prime sur l'effet. Qui a demandé moins d'animation
+ * reçoit l'interface immobile, sans exception — y compris sur les cascades.
+ */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+  .releve:hover {
+    transform: none;
   }
 }

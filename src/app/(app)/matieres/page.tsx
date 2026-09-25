@@ -5,6 +5,7 @@ import { listerMatieres } from '@/services/academique';
 import { Carte } from '@/components/ui/carte';
 import { EtatVide } from '@/components/ui/etats';
 import { FormulaireMatiere, LigneMatiere } from './formulaires';
+import { TitrePage } from '@/components/ui/titre-page';
 
 export const metadata: Metadata = { title: 'Matières' };
 
@@ -16,7 +17,7 @@ export default async function PageMatieres() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-encre">Matières</h1>
+        <TitrePage teinte="academique">Matières</TitrePage>
         <p className="text-sm text-encre-douce">
           {contexte.etablissementActif.name} · enseignements dispensés dans cet établissement.
         </p>
